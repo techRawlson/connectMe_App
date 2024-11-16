@@ -3,7 +3,12 @@ import { NavigationContainer, StackActions } from '@react-navigation/native'
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { useSelector } from 'react-redux';
 import ActivateTag from './src/Screens/ActivateTag';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
+import Color from './src/constant/Color';
+import Feather from 'react-native-vector-icons/Feather';
+import QrcodeReader from './src/Screens/QrcodeReader';
+import HomePage from './src/Screens/HomePage';
+import ContactVehicleOwner from './src/Screens/ContactVehicleOwner';
 
 const Stack = createNativeStackNavigator();
 
@@ -32,15 +37,22 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        screenOptions={{ headerStyle: { backgroundColor: "#7c7cf1", }, headerTintColor: "white" }}
-        // options={({ navigation }) => ({
-        //   header
-        // })}
+        screenOptions={{ headerStyle: { backgroundColor: Color.Header_Fooler_Background_Color, }, headerTintColor: "black", }}
       >
+        <Stack.Screen name='Home Page' component={HomePage} />
         <Stack.Screen
           name='Activate Tag'
           component={ActivateTag}
+          options={{
+            headerTitle: "",
+            headerRight: () => (
+              <TouchableOpacity>
+                <Feather name='list' size={25} />
+              </TouchableOpacity>
+            )
+          }}
         />
+        <Stack.Screen name='Contact Vehicle Owner' component={ContactVehicleOwner} />
         {/* <Stack.Screen
           name="HomePage"
           component={Acti}
