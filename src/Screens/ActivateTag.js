@@ -24,15 +24,22 @@ import axios from 'axios'
 
 
 const ActivateTag = (probs) => {
-    console.log(probs.route.params.id);
+    // console.log(probs.route.params.id);
 
     const [modalVisible, setModalVisible] = useState(false)
-    const [uniqueId, setUniqueId] = useState(probs.route.params.id)
+    const [otpSend, setOtpSend] = useState(false)
+    const [uniqueId, setUniqueId] = useState(probs?.route?.params?.id)
+    // const [uniqueId, setUniqueId] = useState("918273")
 
     const [name, setName] = useState("")
     const [phoneNumber, setPhoneNumber] = useState("")
     const [vehicleNumber, setVehcleNumber] = useState("")
     const [vehicleDetails, setVehcleDetails] = useState("")
+    const [otp, setOtp] = useState("")
+    const [generatedOtp, setGeneratedOtp] = useState("")
+
+    const [verifiedOtp, setVerifiedOtp] = useState(false);
+
 
 
 
@@ -67,13 +74,13 @@ const ActivateTag = (probs) => {
                 vehicleNumber: vehicleNumber,
                 carDetails: vehicleDetails,
             }
-            console.log("body", body);
 
             const res = bodyValidater(body)
             if (res) {
+                console.log("body", body);
                 let URL = `http://192.168.1.111:8082/api/user/assignQRCode`;
                 let response = await axios.post(URL, body)
-                setModalVisible(false)
+                closeModalHandler()
                 Alert.alert("Success", response.data, [
                     {
                         text: "Ok",
@@ -111,17 +118,53 @@ const ActivateTag = (probs) => {
         return true;
     }
 
-    const onSuccess = (e) => {
-        Alert.alert('QR Code Scanned!', e.data);
-        console.log('QR Code Data:', e.data);
+    const generateOTPHandler = () => {
+        // Generate a random number between 100000 and 999999
+        const otp = Math.floor(100000 + Math.random() * 900000);
+        return otp.toString(); // Convert to string if needed
     };
 
-    // useEffect(() => {
-    //     if (urls !== "") {
-    //         console.log("Scanned URL:", urls);
-    //         getIdFromUrl(urls);
-    //     }
-    // }, [urls]);
+    const sendOtpHandler = async () => {
+        try {
+            let otp = generateOTPHandler();
+            setGeneratedOtp(otp)
+            console.log(otp);
+            console.log(name);
+            console.log(phoneNumber);
+            let URL = `https://sms.paragalaxy.com/smpp_api/sms?token=7caab167db42fb832cf6ca9f68eebae6&To=${phoneNumber}&Text=Your%20verification%20code%20is%20${otp}.%20Please%20enter%20OTP%20to%20confirm%20mobile%20number.%20Parahittech.com&tid=1607100000000107353`
+            let response = await axios.post(URL)
+            if (response.data.status == "200 Ok") {
+                setOtpSend(true)
+            }
+            console.log(response.data);
+        } catch (error) {
+
+        }
+    }
+
+    const verifyOtpHandler = () => {
+        if (otp == generatedOtp) {
+            setVerifiedOtp(true)
+        } else {
+            Alert.alert("Alert", "Enter Valid Otp")
+            setVerifiedOtp(false)
+        }
+    }
+
+    const clearState = () => {
+        setName("")
+        setPhoneNumber("")
+        setVehcleNumber("")
+        setVehcleDetails("")
+        setOtp("")
+        setOtpSend(false)
+        setVerifiedOtp(false)
+    }
+
+    const closeModalHandler = () => {
+        setModalVisible(false)
+        clearState();
+    }
 
 
 
@@ -197,7 +240,7 @@ const ActivateTag = (probs) => {
                 animationType="slide" // or 'fade'
                 transparent={true} // makes the modal's background transparent
                 visible={modalVisible}
-                onRequestClose={() => setModalVisible(false)} // handles hardware back button on Android
+                onRequestClose={closeModalHandler} // handles hardware back button on Android
             >
                 <View style={styles.modalOverlay}>
                     <View style={styles.modalContent}>
@@ -210,9 +253,7 @@ const ActivateTag = (probs) => {
                                     <Text style={styles.modalHeaderText}>Vehicle Details Form</Text>
                                 </View>
                                 <View>
-                                    <TouchableOpacity onPress={() => setModalVisible(false)}>
-                                        <Ionicons name='close' size={30} color={Color.Modal_Text_Color} />
-                                    </TouchableOpacity>
+                                    <Ionicons name='close' size={30} color={Color.Modal_Text_Color} onPress={closeModalHandler} />
                                 </View>
                             </View>
                             <View style={styles.modalInputView}>
@@ -226,6 +267,7 @@ const ActivateTag = (probs) => {
                                     onChangeText={text => setName(text)}
                                     placeholder='Provide your name for registering tags'
                                     placeholderTextColor={"gray"}
+                                    editable={!verifiedOtp}
                                     multiline={false}
                                     numberOfLines={1}
                                     scrollEnabled
@@ -243,54 +285,86 @@ const ActivateTag = (probs) => {
                                     placeholder='Primary number where you will get OTP for register'
                                     placeholderTextColor={"gray"}
                                     keyboardType='phone-pad'
+                                    editable={!verifiedOtp}
                                     multiline={false}
                                     numberOfLines={1}
                                     scrollEnabled
                                     ellipsizeMode="tail" // Truncates the text with an ellipsis (...)
                                 />
                             </View>
-                            <View style={styles.modalInputView}>
-                                <View style={{ flexDirection: "row" }}>
-                                    <Text style={styles.inputLableText}>Vehicle Number</Text>
-                                    <Ionicons name='star' color={"red"} size={7} />
-                                </View>
-                                <TextInput
-                                    style={styles.textInput}
-                                    value={vehicleNumber}
-                                    onChangeText={text => setVehcleNumber(text.toUpperCase())}
-                                    placeholder='Provide your vehicle number'
-                                    placeholderTextColor={"gray"}
-                                    multiline={false}
-                                    inputMode='text'
-                                    numberOfLines={1}
-                                    scrollEnabled
-                                />
-                            </View>
-                            <View style={styles.modalInputView}>
-                                <View style={{ flexDirection: "row" }}>
-                                    <Text style={styles.inputLableText}>Vehicle Details</Text>
-                                    <Ionicons name='star' color={"red"} size={7} />
-                                </View>
-                                <TextInput
-                                    style={[styles.textInput, { height: 100 }]}
-                                    value={vehicleDetails}
-                                    onChangeText={text => setVehcleDetails(text)}
-                                    textAlignVertical='top'
-                                    multiline
-                                    numberOfLines={3}
-                                    placeholder='Provide your vehicle details'
-                                    placeholderTextColor={"gray"}
-                                    scrollEnabled
-                                />
-                            </View>
-                            <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 30 }}>
-                                <View>
-                                    <Buttons title={"Submit"} bgColor={Color.Submit_Button_Background_Color} textColor={"black"} onClick={submitButtonHandler} />
-                                </View>
-                                <View>
-                                    <Buttons title={"Cancel"} bgColor={Color.Cansel_Button_Background_Color} textColor={"black"} onClick={() => setModalVisible(false)} />
-                                </View>
-                            </View>
+                            {
+                                !verifiedOtp ?
+                                    !otpSend ?
+                                        <View style={styles.modalInputView}>
+                                            <Buttons title={"Send OTP"} bgColor={Color.Button_BackGroung_Color} textColor={Color.Button_Text_Color} onClick={sendOtpHandler} />
+                                        </View> :
+                                        <>
+                                            <View style={styles.modalInputView}>
+                                                <View style={{ flexDirection: "row" }}>
+                                                    <Text style={styles.inputLableText}>Otp</Text>
+                                                    <Ionicons name='star' color={"red"} size={7} />
+                                                </View>
+                                                <TextInput
+                                                    style={styles.textInput}
+                                                    value={otp}
+                                                    onChangeText={text => setOtp(text)}
+                                                    placeholder='Enter Otp'
+                                                    placeholderTextColor={"gray"}
+                                                    multiline={false}
+                                                    inputMode='decimal'
+                                                    numberOfLines={1}
+                                                    scrollEnabled
+                                                />
+                                            </View>
+                                            <View style={styles.modalInputView}>
+                                                <Buttons title={"Verify OTP"} bgColor={Color.Button_BackGroung_Color} textColor={Color.Button_Text_Color} onClick={verifyOtpHandler} />
+                                            </View>
+                                        </> :
+                                    <>
+                                        <View style={styles.modalInputView}>
+                                            <View style={{ flexDirection: "row" }}>
+                                                <Text style={styles.inputLableText}>Vehicle Number</Text>
+                                                <Ionicons name='star' color={"red"} size={7} />
+                                            </View>
+                                            <TextInput
+                                                style={styles.textInput}
+                                                value={vehicleNumber}
+                                                onChangeText={text => setVehcleNumber(text.toUpperCase())}
+                                                placeholder='Provide your vehicle number'
+                                                placeholderTextColor={"gray"}
+                                                multiline={false}
+                                                inputMode='text'
+                                                numberOfLines={1}
+                                                scrollEnabled
+                                            />
+                                        </View>
+                                        <View style={styles.modalInputView}>
+                                            <View style={{ flexDirection: "row" }}>
+                                                <Text style={styles.inputLableText}>Vehicle Details</Text>
+                                                <Ionicons name='star' color={"red"} size={7} />
+                                            </View>
+                                            <TextInput
+                                                style={[styles.textInput, { height: 100 }]}
+                                                value={vehicleDetails}
+                                                onChangeText={text => setVehcleDetails(text)}
+                                                textAlignVertical='top'
+                                                multiline
+                                                numberOfLines={3}
+                                                placeholder='Provide your vehicle details'
+                                                placeholderTextColor={"gray"}
+                                                scrollEnabled
+                                            />
+                                        </View>
+                                        <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 30 }}>
+                                            <View>
+                                                <Buttons title={"Cancel"} bgColor={Color.Cansel_Button_Background_Color} textColor={"black"} onClick={closeModalHandler} />
+                                            </View>
+                                            <View>
+                                                <Buttons title={"Submit"} bgColor={Color.Submit_Button_Background_Color} textColor={"black"} onClick={submitButtonHandler} />
+                                            </View>
+                                        </View>
+                                    </>
+                            }
                         </ScrollView>
                     </View>
                 </View>

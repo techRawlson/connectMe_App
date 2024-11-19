@@ -1,16 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import { NavigationContainer, StackActions } from '@react-navigation/native'
-import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import { useSelector } from 'react-redux';
-import ActivateTag from './src/Screens/ActivateTag';
-import { StyleSheet, TouchableOpacity } from 'react-native';
-import Color from './src/constant/Color';
-import Feather from 'react-native-vector-icons/Feather';
-import QrcodeReader from './src/Screens/QrcodeReader';
-import HomePage from './src/Screens/HomePage';
-import ContactVehicleOwner from './src/Screens/ContactVehicleOwner';
+import React from 'react'
+import Main from './src/Screens/Main';
+import { View } from 'react-native';
 
-const Stack = createNativeStackNavigator();
+
 
 const App = () => {
 
@@ -35,49 +27,7 @@ const App = () => {
   // };
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{ headerStyle: { backgroundColor: Color.Header_Fooler_Background_Color, }, headerTintColor: "black", }}
-      >
-        <Stack.Screen name='Home Page' component={HomePage} />
-        <Stack.Screen
-          name='Activate Tag'
-          component={ActivateTag}
-          options={{
-            headerTitle: "",
-            headerRight: () => (
-              <TouchableOpacity>
-                <Feather name='list' size={25} />
-              </TouchableOpacity>
-            )
-          }}
-        />
-        <Stack.Screen name='Contact Vehicle Owner' component={ContactVehicleOwner} />
-        {/* <Stack.Screen
-          name="HomePage"
-          component={Acti}
-          options={({ navigation }) => ({
-            headerTitle: "Demo International School",
-            headerTitleAlign: "center",
-            headerRight: () => (
-              <Pressable
-                onPress={() => profileScreenHandler(navigation)}
-              >
-
-                <Image style={{ height: 30, width: 30, borderRadius: 15 }}
-                  source={{ uri: profileImage }}
-                />
-              </Pressable>
-            ),
-          })}
-        /> */}
-
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Main />
   )
 }
 export default App
-
-const style = StyleSheet.create({
-
-})

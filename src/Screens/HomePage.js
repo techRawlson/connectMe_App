@@ -1,15 +1,35 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import { FlatList, Image, Modal, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign'
-import Color from '../constant/Color'
+import Entypo from 'react-native-vector-icons/Entypo'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import axios from 'axios';
+import Footer from './Footer'
+import Color from '../constant/Color'
+import AnimatedImageSlider from './AnimatedImageSlider'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 
 const HomePage = ({ navigation }) => {
 
+
+    
+
     const [isScannerActive, setIsScannerActive] = useState(false); // State to toggle scanner
+
+    const IconMap = {
+        AntDesign,
+        Entypo,
+        FontAwesome,
+        FontAwesome6,
+        FontAwesome5,
+        MaterialCommunityIcons,
+    };
 
 
 
@@ -27,6 +47,8 @@ const HomePage = ({ navigation }) => {
     };
 
     const getData = async (id) => {
+        console.log(id);
+
         try {
             let URL = `http://192.168.1.111:8082/api/user/userDetails/${id}`
 
@@ -45,38 +67,84 @@ const HomePage = ({ navigation }) => {
         }
     }
     const toggleScanner = () => {
-        setIsScannerActive(!isScannerActive);
+        console.log("toggleScanner");
+
+        setIsScannerActive(true);
     };
+
+    let data = [
+        { title: "Profile", iconName: "user-alt", iconLable: "FontAwesome5" },
+        { title: "Demo", iconName: "youtube", iconLable: "AntDesign" },
+        { title: "Activate Tag", iconName: "tag", iconLable: "AntDesign", onPress: toggleScanner },
+        { title: "Login", iconName: "login", iconLable: "MaterialCommunityIcons" },
+        { title: "Support", iconName: "headset", iconLable: "FontAwesome5" },
+        { title: "Shop", iconName: "shopping-cart", iconLable: "FontAwesome5" },
+
+        { title: "N/A", iconName: "circle-with-cross", iconLable: "Entypo" },
+        { title: "N/A", iconName: "circle-with-cross", iconLable: "Entypo" },
+        { title: "N/A", iconName: "circle-with-cross", iconLable: "Entypo" },
+
+    ]
+    let renderItemData = () => {
+
+    }
+
+    const RenderBox = ({ title, iconName, iconLable, onPress }) => {
+        let Icon = IconMap[iconLable];
+        return (
+            < View style={{ borderWidth: 1, borderColor: "#ddd", margin: "auto", marginBottom: 10, height: 80, width: 100, borderRadius: 10, padding: 10, }}>
+                <TouchableOpacity style={{ flex: 1 }} onPress={onPress}>
+                    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+                        <Icon name={iconName} size={30} />
+                    </View>
+                    <Text style={{ textAlign: "center" }}>{title}</Text>
+                </TouchableOpacity>
+            </View >
+        )
+    }
+
     return (
-        <View style={styles.rootContainer}>
-            <Text>HomePage</Text>
-            <View style={styles.buttonViewContainer}>
-                {isScannerActive ?
-                    <View style={styles.container}>
-                        {isScannerActive ? (
-                            <QRCodeScanner
-                                onRead={(data) => getIdFromUrl(data.data)}
-                                reactivate={true}
-                                reactivateTimeout={500}
-                                showMarker={true}
-                            />
-                        ) : (
-                            <Text style={styles.centerText}>QR Code Scanner is Off</Text>
-                        )}
-                    </View> :
-                    <TouchableOpacity style={styles.buttonView}
-                        onPress={toggleScanner}
-                    >
-                        <View style={styles.iconView}>
-                            <AntDesign name='camera' size={40} />
-                        </View>
-                        <View style={styles.textView}>
-                            <Text style={styles.text}>Scan Tag</Text>
-                        </View>
-                    </TouchableOpacity>
-                }
+        <View style={styles.rootContainer} >
+            < View style={{ flex: 1, paddingHorizontal: 10 }}>
+                <View style={{ marginBottom: 50, overflow: "hidden" }}>
+                    {/* <Image style={{ height: 250, width: "100%", objectFit: "contain", }} source={require("../../assrts/image/download1.png")} /> */}
+                    <AnimatedImageSlider />
+                </View>
+                <View style={{}}>
+                    <FlatList
+                        data={data}
+                        renderItem={({ item, index }) => {
+                            return (
+                                <RenderBox key={index} title={item.title} iconName={item.iconName} iconLable={item.iconLable} onPress={item.onPress ? item.onPress : () => item.onPress} />
+                            )
+                        }}
+                        numColumns={3}
+                    />
+
+                </View>
             </View>
-        </View>
+            <Footer />
+
+
+            < Modal
+                visible={isScannerActive}
+                transparent={true}
+                onRequestClose={() => setIsScannerActive(false)
+                }
+            >
+                <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+                    {/* <View style={{}}> */}
+                    <QRCodeScanner
+                        onRead={(data) => getIdFromUrl(data.data)}
+                        reactivate={true}
+                        reactivateTimeout={500}
+                        showMarker={true}
+                    />
+                    {/* </View> */}
+                </View>
+
+            </Modal >
+        </View >
     )
 }
 
@@ -109,6 +177,8 @@ const styles = StyleSheet.create({
 
     rootContainer: {
         flex: 1,
+        // paddingHorizontal: 10,
+        paddingTop: 20
     },
     buttonViewContainer: {
         flex: 1,
@@ -133,6 +203,5 @@ const styles = StyleSheet.create({
     },
     text: {
         color: Color.Button_Text_Color
-    }
-
+    },
 })
