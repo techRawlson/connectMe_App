@@ -11,6 +11,7 @@ import Foundation from 'react-native-vector-icons/Foundation';
 import Color from '../constant/Color';
 import axios from 'axios';
 import Buttons from '../compont/Buttons';
+import Footer from './Footer';
 
 const ContactVehicleOwner = (probs) => {
 
@@ -226,7 +227,8 @@ const ContactVehicleOwner = (probs) => {
                     <Text style={{ color: "#bfbfbf", fontSize: 12, textAlign: "center" }}>Dlease note any kind of spam will get your ip and number blocked on platform for 6 months.</Text>
                 </View>
             </View>
-            <View style={styles.bottomButtonViewContainer}>
+            <Footer />
+            {/* <View style={styles.bottomButtonViewContainer}>
                 <TouchableOpacity style={[styles.bottomButtonView]}>
                     <View>
                         <Ionicons name='arrow-back' size={22} />
@@ -251,7 +253,7 @@ const ContactVehicleOwner = (probs) => {
                     </View>
                     <Text>More</Text>
                 </TouchableOpacity>
-            </View>
+            </View> */}
             <Modal
                 transparent={true}
                 animationType='slide'

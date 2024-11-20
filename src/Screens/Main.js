@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useSelector } from 'react-redux';
 import React, { useEffect, useState } from 'react'
 
@@ -11,6 +11,8 @@ import ActivateTag from './ActivateTag';
 import ContactVehicleOwner from './ContactVehicleOwner';
 import LoginScreen from './LoginScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Profile from './Profile';
+import MyTags from './MyTags';
 
 const Stack = createNativeStackNavigator();
 
@@ -32,6 +34,10 @@ const Main = () => {
         getDatas()
     }, [])
 
+    const changeScreen = (navigation) => {
+        navigation.navigate("Profile")
+    }
+
 
     return (
         <NavigationContainer>
@@ -45,15 +51,6 @@ const Main = () => {
                         component={LoginScreen}
                         options={{
                             headerTitle: "My Tag...",
-                            // headerShown: false,
-                            // headerTitle: "",
-                            headerRight: () => {
-                                return (
-                                    <View style={{ borderRadius: 25 }}>
-                                        <Image style={{ height: 35, width: 35 }} source={require("../../assrts/image/ProfileIcon.png")} />
-                                    </View>
-                                )
-                            }
                         }}
                     />
                 }
@@ -61,17 +58,18 @@ const Main = () => {
                 <Stack.Screen
                     name='Home Page'
                     component={HomePage}
-                    options={{
-                        headerTitle: "My Tag...",
-                        headerRight: () => {
-                            return (
+                    options={({ navigation }) => ({
+                        headerTitle: "Home Page",
+                        headerRight: () => (
+                            <TouchableOpacity onPress={() => changeScreen(navigation)}>
                                 <View style={{ borderRadius: 25 }}>
                                     <Image style={{ height: 35, width: 35 }} source={require("../../assrts/image/ProfileIcon.png")} />
                                 </View>
-                            )
-                        }
+                            </TouchableOpacity>
+                        ),
+                    })}
 
-                    }} />
+                />
                 <Stack.Screen
                     name='Activate Tag'
                     component={ActivateTag}
@@ -84,29 +82,18 @@ const Main = () => {
                         )
                     }} />
                 <Stack.Screen
-                    name='Contact Vehicle Owner'
-                    component={ContactVehicleOwner}
+                    name='Profile'
+                    component={Profile}
                     options={{ headerTitle: "" }}
                 />
-                {/* <Stack.Screen
-          name="HomePage"
-          component={Acti}
-          options={({ navigation }) => ({
-            headerTitle: "Demo International School",
-            headerTitleAlign: "center",
-            headerRight: () => (
-              <Pressable
-                onPress={() => profileScreenHandler(navigation)}
-              >
-
-                <Image style={{ height: 30, width: 30, borderRadius: 15 }}
-                  source={{ uri: profileImage }}
+                <Stack.Screen
+                    name='My Tags'
+                    component={MyTags}
                 />
-              </Pressable>
-            ),
-          })}
-        /> */}
-
+                <Stack.Screen
+                    name='Contact Vehicle Owner'
+                    component={ContactVehicleOwner}
+                />
             </Stack.Navigator>
         </NavigationContainer>
     )

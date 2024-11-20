@@ -16,10 +16,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 
 const HomePage = ({ navigation }) => {
-
-
-    
-
     const [isScannerActive, setIsScannerActive] = useState(false); // State to toggle scanner
 
     const IconMap = {
@@ -53,6 +49,8 @@ const HomePage = ({ navigation }) => {
             let URL = `http://192.168.1.111:8082/api/user/userDetails/${id}`
 
             let data = await (await axios.get(URL)).data
+            console.log(data);
+            
 
             if (data) {
                 navigation.navigate("Contact Vehicle Owner", { data });
@@ -72,22 +70,44 @@ const HomePage = ({ navigation }) => {
         setIsScannerActive(true);
     };
 
+    const changeScreen = (profile) => {
+        navigation.navigate(profile)
+    }
+
+    const logOutHandler = () => {
+        navigation.replace("Login")
+    }
+
     let data = [
-        { title: "Profile", iconName: "user-alt", iconLable: "FontAwesome5" },
+        // { title: "Profile", iconName: "user-alt", iconLable: "FontAwesome5" },
         { title: "Demo", iconName: "youtube", iconLable: "AntDesign" },
         { title: "Activate Tag", iconName: "tag", iconLable: "AntDesign", onPress: toggleScanner },
-        { title: "Login", iconName: "login", iconLable: "MaterialCommunityIcons" },
+        { title: "Log out", iconName: "log-out", iconLable: "Entypo", onPress: logOutHandler },
         { title: "Support", iconName: "headset", iconLable: "FontAwesome5" },
         { title: "Shop", iconName: "shopping-cart", iconLable: "FontAwesome5" },
+        { title: "My Tags", iconName: "car", iconLable: "FontAwesome5", onPress: () => { changeScreen("My Tags") } },
 
-        { title: "N/A", iconName: "circle-with-cross", iconLable: "Entypo" },
-        { title: "N/A", iconName: "circle-with-cross", iconLable: "Entypo" },
-        { title: "N/A", iconName: "circle-with-cross", iconLable: "Entypo" },
+        { title: "Social", iconName: "twitter", iconLable: "AntDesign" },
+        { title: "About", iconName: "circle-with-cross", iconLable: "Entypo" },
+        { title: "Feq", iconName: "circle-with-cross", iconLable: "Entypo" },
 
     ]
-    let renderItemData = () => {
 
+    const getProfileData = async () => {
+        try {
+            console.log("getProfileData");
+            let savedData = JSON.parse(await AsyncStorage.getItem("Login"))
+            let number = savedData.number
+            // let URL = `http://192.168.1.111:8082/api/user-login/getUserLoginByMobile?loginMobileNumber=${number}`
+            // let data = (await axios.get(URL)).data
+            // console.log("pro", data);
+        } catch (error) {
+            console.error("Fetching Data Error", error);
+        }
     }
+    useEffect(() => {
+        getProfileData()
+    }, [])
 
     const RenderBox = ({ title, iconName, iconLable, onPress }) => {
         let Icon = IconMap[iconLable];
@@ -105,9 +125,9 @@ const HomePage = ({ navigation }) => {
 
     return (
         <View style={styles.rootContainer} >
+            {/* <ScrollView> */}
             < View style={{ flex: 1, paddingHorizontal: 10 }}>
                 <View style={{ marginBottom: 50, overflow: "hidden" }}>
-                    {/* <Image style={{ height: 250, width: "100%", objectFit: "contain", }} source={require("../../assrts/image/download1.png")} /> */}
                     <AnimatedImageSlider />
                 </View>
                 <View style={{}}>
@@ -123,6 +143,7 @@ const HomePage = ({ navigation }) => {
 
                 </View>
             </View>
+            {/* </ScrollView> */}
             <Footer />
 
 

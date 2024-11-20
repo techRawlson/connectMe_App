@@ -38,7 +38,7 @@ const LoginScreen = ({ navigation }) => {
         } else if (!isCaptchaChecked) {
             Alert.alert("CAPTCHA Required", "Please verify you are not a robot.");
         } else {
-            Alert.alert("Success", "Proceeding to the next step.");
+            // Alert.alert("Success", "Proceeding to the next step.");s
             sendOtpHandler()
         }
     };
@@ -51,8 +51,11 @@ const LoginScreen = ({ navigation }) => {
 
     const sendOtpHandler = async () => {
         try {
-            let otp = generateOTPHandler();
+            // let otp = generateOTPHandler();
+            let otp = "000000";
             setGeneratedOtp(otp)
+            console.log(otp);
+
             console.log(mobileNumber);
 
             let URL = `https://sms.paragalaxy.com/smpp_api/sms?token=7caab167db42fb832cf6ca9f68eebae6&To=${mobileNumber}&Text=Your%20verification%20code%20is%20${otp}.%20Please%20enter%20OTP%20to%20confirm%20mobile%20number.%20Parahittech.com&tid=1607100000000107353`
@@ -69,15 +72,36 @@ const LoginScreen = ({ navigation }) => {
         }
     }
 
-    const verifyOtpHandler = () => {
+    const verifyOtpHandler = async () => {
         console.log("Verify Otp Handler");
+        console.log(generatedOtp);
+
         if (generatedOtp == ownerOtp) {
+            try {
+                const formData = new FormData();
+                formData.append('loginMobileNumber', mobileNumber);
+                let URL = `http://192.168.1.111:8082/api/user-login`
+                let res = await axios.post(URL, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    }
+                })
+                console.log("res.data", res.data);
+            } catch (error) {
+                console.log("Login Error", error);
+            }
+
+
+
+
             let newData = JSON.stringify({ login: true, number: mobileNumber })
             AsyncStorage.setItem("Login", newData)
             navigation.replace("Home Page")
+
         } else {
             Alert.alert("Alert", "Enter valid otp")
         }
+
     }
 
 
@@ -180,7 +204,6 @@ const LoginScreen = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
             </ScrollView >
-
             {/* Footer */}
             < Footer />
         </View >

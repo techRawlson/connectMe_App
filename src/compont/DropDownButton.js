@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Pressable, Image, ScrollView, TextInput, Modal } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import Color from '../../constant/Color'
-import Bold from '../../constant/Bold'
+import Color from '../constant/Color'
+import Bold from '../constant/Bold'
 
 const DropDownButton = ({ dropdownTitle, setDropdownTitle, data }) => {
     // console.log("Data: ",data);
@@ -12,10 +12,10 @@ const DropDownButton = ({ dropdownTitle, setDropdownTitle, data }) => {
         // console.log("Every Once Time Render");
         if (dropdownTitle == "") {
             setDropdownTitle(datas[0])
-        }else{
+        } else {
             setDropdownTitle(dropdownTitle)
         }
-    },[])
+    }, [])
     return (
         <View>
             <Pressable style={styles.selectOptionBtn} onPress={() => setImageChange(!imageChange)} onBlur={() => setImageChange(!imageChange)}>
@@ -25,8 +25,8 @@ const DropDownButton = ({ dropdownTitle, setDropdownTitle, data }) => {
                     </View>
                     <View >
                         {imageChange ?
-                            <Image style={{ height: 20, width: 20 }} source={require("../../../assrts/image/arrowhead-up.png")} /> :
-                            <Image style={{ height: 20, width: 20 }} source={require("../../../assrts/image/arrowhead-down.png")} />
+                            <Image style={{ height: 20, width: 20 }} source={require("../../assrts/image/arrowhead-up.png")} /> :
+                            <Image style={{ height: 20, width: 20 }} source={require("../../assrts/image/arrowhead-down.png")} />
                         }
                     </View>
                 </View>
@@ -40,7 +40,7 @@ const DropDownButton = ({ dropdownTitle, setDropdownTitle, data }) => {
                         {
                             datas.map((item, index) => {
                                 return (
-                                    <View key={index} style={[styles.dropdownItemView, index == 0 ? { borderTopWidth: 0 } : ""]}>
+                                    <View key={index} style={[styles.dropdownItemView, index == 0 ? { borderTopWidth: 0, } : ""]}>
                                         <Text style={styles.dropdownItem} onPress={() => { setImageChange(!imageChange); setDropdownTitle(item) }}>{item}</Text>
                                     </View>
                                 )
@@ -67,9 +67,8 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         paddingHorizontal: 10,
     },
-    lableText:{
-        color:Color.Table_Row_Text_Color,
-        fontWeight:Bold.LableFontWeight
+    lableText: {
+        color: "gray",
     },
     dropDownArea: {
         borderWidth: 0.5,
@@ -82,7 +81,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: 10,
         position: "absolute",
-        backgroundColor: "white",
+        borderColor: Color.Button_BackGroung_Color,
+        // backgroundColor: "white",
+        backgroundColor: Color.Modal_Background_Color,
         zIndex: 1
     },
     searchInput: {
@@ -104,10 +105,11 @@ const styles = StyleSheet.create({
     dropdownItem: {
         paddingVertical: 5,
         paddingHorizontal: 5,
-        color:Color.Table_Row_Text_Color
+        color: Color.Button_BackGroung_Color
     },
     dropdownItemView: {
-        borderTopWidth: 0.5
+        borderTopWidth: 0.5,
+        borderColor: Color.Button_BackGroung_Color
     },
 
 })
