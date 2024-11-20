@@ -50,7 +50,7 @@ const HomePage = ({ navigation }) => {
 
             let data = await (await axios.get(URL)).data
             console.log(data);
-            
+
 
             if (data) {
                 navigation.navigate("Contact Vehicle Owner", { data });
@@ -144,7 +144,10 @@ const HomePage = ({ navigation }) => {
                 </View>
             </View>
             {/* </ScrollView> */}
-            <Footer />
+            <Footer
+                isScannerActive={isScannerActive}
+                setIsScannerActive={setIsScannerActive}
+            />
 
 
             < Modal
