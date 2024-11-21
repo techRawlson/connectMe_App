@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     View,
     Text,
@@ -31,6 +31,19 @@ const LoginScreen = ({ navigation }) => {
     const [generatedOtp, setGeneratedOtp] = useState("")
 
 
+    const changeScreenHandler = async () => {
+        let data = JSON.parse(await AsyncStorage.getItem("Login"))
+        console.log(data)
+        if (data) {
+            navigation.replace("Home Page")
+        }
+    }
+
+    useEffect(() => {
+        changeScreenHandler()
+    }, [])
+
+
 
     const handleNext = () => {
         if (mobileNumber.length < 10 || isNaN(mobileNumber)) {
@@ -51,8 +64,8 @@ const LoginScreen = ({ navigation }) => {
 
     const sendOtpHandler = async () => {
         try {
-            // let otp = generateOTPHandler();
-            let otp = "000000";
+            let otp = generateOTPHandler();
+            // let otp = "000000";
             setGeneratedOtp(otp)
             console.log(otp);
 
@@ -205,7 +218,7 @@ const LoginScreen = ({ navigation }) => {
                 </View>
             </ScrollView >
             {/* Footer */}
-            < Footer />
+            {/* < Footer /> */}
         </View >
     );
 };

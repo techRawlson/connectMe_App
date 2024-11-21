@@ -74,7 +74,8 @@ const HomePage = ({ navigation }) => {
         navigation.navigate(profile)
     }
 
-    const logOutHandler = () => {
+    const logOutHandler = async () => {
+        await AsyncStorage.removeItem("Login")
         navigation.replace("Login")
     }
 

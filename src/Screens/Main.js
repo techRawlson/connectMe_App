@@ -19,21 +19,6 @@ const Stack = createNativeStackNavigator();
 
 
 const Main = () => {
-
-    const [loginPageShow, setLoginPage] = useState(true);
-
-    const getDatas = async () => {
-        let data = JSON.parse(await AsyncStorage.getItem("Login"))
-        console.log(data)
-        if (data) {
-            setLoginPage(false)
-        }
-    }
-
-    useEffect(() => {
-        getDatas()
-    }, [])
-
     const changeScreen = (navigation) => {
         navigation.navigate("Profile")
     }
@@ -44,16 +29,13 @@ const Main = () => {
             <Stack.Navigator
                 screenOptions={{ headerStyle: { backgroundColor: Color.Header_Fooler_Background_Color, }, headerTintColor: "black", }}
             >
-                {
-                    loginPageShow &&
-                    <Stack.Screen
-                        name='Login'
-                        component={LoginScreen}
-                        options={{
-                            headerTitle: "My Tag...",
-                        }}
-                    />
-                }
+                <Stack.Screen
+                    name='Login'
+                    component={LoginScreen}
+                    options={{
+                        headerTitle: "My Tag...",
+                    }}
+                />
 
                 <Stack.Screen
                     name='Home Page'
