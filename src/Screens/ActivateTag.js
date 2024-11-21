@@ -94,7 +94,8 @@ const ActivateTag = (probs) => {
 
     const sendOtpHandler = async () => {
         try {
-            let otp = "000000";
+            // let otp = generateOTPHandler();
+            let otp = "123123";
             setGeneratedOtp(otp)
             let URL = `https://sms.paragalaxy.com/smpp_api/sms?token=7caab167db42fb832cf6ca9f68eebae6&To=${phoneNumber}&Text=Your%20verification%20code%20is%20${otp}.%20Please%20enter%20OTP%20to%20confirm%20mobile%20number.%20Parahittech.com&tid=1607100000000107353`
             let response = await axios.post(URL)

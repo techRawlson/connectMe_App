@@ -13,9 +13,14 @@ import Footer from './Footer'
 import Color from '../constant/Color'
 import AnimatedImageSlider from './AnimatedImageSlider'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useSelector } from 'react-redux'
 
 
 const HomePage = ({ navigation }) => {
+
+    const UserDetails = useSelector((item) => item.UserDetails)
+    console.log("userDetails", UserDetails);
+
     const [isScannerActive, setIsScannerActive] = useState(false); // State to toggle scanner
 
     const IconMap = {
@@ -32,7 +37,6 @@ const HomePage = ({ navigation }) => {
     const getIdFromUrl = (url) => {
         try {
             console.log("url", url);
-
             const match = url.match(/[?&]id=([^&]+)/); // Find `id` in the query string
             const id = match ? match[1] : null; // Extract the value
             getData(id)
@@ -85,7 +89,7 @@ const HomePage = ({ navigation }) => {
         { title: "Activate Tag", iconName: "tag", iconLable: "AntDesign", onPress: toggleScanner },
         { title: "Log out", iconName: "log-out", iconLable: "Entypo", onPress: logOutHandler },
         { title: "Support", iconName: "headset", iconLable: "FontAwesome5" },
-        { title: "Shop", iconName: "shopping-cart", iconLable: "FontAwesome5" },
+        { title: "Shop", iconName: "shopping-cart", iconLable: "FontAwesome5", onPress: () => { changeScreen("Shop Page") } },
         { title: "My Tags", iconName: "car", iconLable: "FontAwesome5", onPress: () => { changeScreen("My Tags") } },
 
         { title: "Social", iconName: "twitter", iconLable: "AntDesign" },

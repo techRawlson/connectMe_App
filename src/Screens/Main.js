@@ -13,6 +13,8 @@ import LoginScreen from './LoginScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Profile from './Profile';
 import MyTags from './MyTags';
+import ShopPage from './ShopPage';
+import CartPage from './CartPage';
 
 const Stack = createNativeStackNavigator();
 
@@ -75,6 +77,15 @@ const Main = () => {
                 <Stack.Screen
                     name='Contact Vehicle Owner'
                     component={ContactVehicleOwner}
+                />
+
+                <Stack.Screen
+                    name='Shop Page'
+                    component={ShopPage}
+                />
+                <Stack.Screen
+                    name='Cart Page'
+                    component={CartPage}
                 />
             </Stack.Navigator>
         </NavigationContainer>

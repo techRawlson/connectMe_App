@@ -18,8 +18,11 @@ import Footer from "./Footer";
 import SingleSelectDropdown from "../../SingleSelectDropdown";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useDispatch } from "react-redux";
+import { setUserDetails } from "../Redux/action";
 
 const LoginScreen = ({ navigation }) => {
+    let dispatch = useDispatch()
 
     const [selectedCountry, setSelectedCountry] = useState("India (+91)");
     const [mobileNumber, setMobileNumber] = useState("");
@@ -33,8 +36,10 @@ const LoginScreen = ({ navigation }) => {
 
     const changeScreenHandler = async () => {
         let data = JSON.parse(await AsyncStorage.getItem("Login"))
-        console.log(data)
+        // console.log(data)
+
         if (data) {
+            dispatch(setUserDetails(data))
             navigation.replace("Home Page")
         }
     }
@@ -64,8 +69,8 @@ const LoginScreen = ({ navigation }) => {
 
     const sendOtpHandler = async () => {
         try {
-            let otp = generateOTPHandler();
-            // let otp = "000000";
+            // let otp = generateOTPHandler();
+            let otp = "123123";
             setGeneratedOtp(otp)
             console.log(otp);
 

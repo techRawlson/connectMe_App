@@ -69,11 +69,11 @@ const MyTags = () => {
                     {getVehicleIcon(vehicle.vehicleType)}
                     {/* <Text style={styles.model}>{vehicle.vehicleType}</Text> */}
                 </View>
-                <View>
-                    {/* <Text style={styles.model}>{vehicle.vehicleType}</Text> */}
+                <View style={{ flex: 1 }}>
+                    <Text style={styles.text}><Text style={styles.label}>Tag Id: </Text>{vehicle?.TagId}</Text>
                     <Text style={styles.text}><Text style={styles.label}>Vehicle Number: </Text>{vehicle.vehicleNumber}</Text>
                     <Text style={styles.text}><Text style={styles.label}>Owner Name: </Text>{vehicle.name}</Text>
-                    <Text style={styles.text}><Text style={styles.label}>Vehicle Details: </Text>{vehicle.vehicleDetails}</Text>
+                    {/* <Text style={styles.text}><Text style={styles.label}>Vehicle Details: </Text>{vehicle.vehicleDetails}</Text> */}
                     <Text style={styles.text}><Text style={styles.label}>Contact Number: </Text>{vehicle.tagRegisterNumber}</Text>
                 </View>
             </View>
