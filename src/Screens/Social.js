@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View, Pressable, Linking, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, Pressable, Linking, TouchableOpacity, Image } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Color from "../constant/Color";
 
@@ -7,27 +7,27 @@ const Social = () => {
 
     const data = [
         {
-            icon: "instagram",
+            icon: require("../../assrts/image/icon/instagram.png"),
             title: "Instagram",
             link: "https://www.instagram.com",
         },
         {
-            icon: "facebook",
+            icon: require("../../assrts/image/icon/facebook.png"),
             title: "Facebook",
             link: "https://www.facebook.com",
         },
         {
-            icon: "youtube",
+            icon: require("../../assrts/image/icon/youtube.png"),
             title: "YouTube",
             link: "https://www.youtube.com",
         },
         {
-            icon: "linkedin",
+            icon: require("../../assrts/image/icon/Linkedin.png"),
             title: "LinkedIn",
             link: "https://www.linkedin.com",
         },
         {
-            icon: "web",
+            icon: require("../../assrts/image/icon/web.png"),
             title: "Website",
             link: "https://www.example.com",
         },
@@ -61,7 +61,13 @@ const Social = () => {
     const renderItem = (item, index) => {
         return (
             <TouchableOpacity onPress={() => handleLinkPress(item.link)} key={index} style={styles.socialItem}>
-                <View style={styles.iconContainer}>{getVehicleIcon(item.icon)}</View>
+                <View style={styles.iconContainer}>
+                    {/* {getVehicleIcon(item.icon)} */}
+                    <Image
+                        style={{ height: 50, width: 50 }}
+                        source={item.icon}
+                    />
+                </View>
                 <View style={styles.pressableArea}>
                     <View style={styles.textContainer}>
                         <Text style={styles.linkText}>{item.title}</Text>

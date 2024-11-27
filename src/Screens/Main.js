@@ -46,7 +46,6 @@ const Main = () => {
                 if (userData?.login) {
                     console.log("Logins", userData);
                     dispatch(setUserDetails(userData));
-                    // navigation.replace("Home Page");
                 }
             } catch (error) {
                 console.error("Error Fetching Data from Storage", error);
@@ -60,11 +59,25 @@ const Main = () => {
         if (UserDetails?.login) {
             navigation.navigate(screenName)
         } else {
-            Alert.alert("Alert", "Plese login first")
+            Alert.alert("Alert", "Plese Login first", [
+                {
+                    text: "Cancel",
+                    style: 'cancel'
+                },
+                {
+                    text: "Login",
+                    // style: "destructive",
+                    onPress: () => { logOutHandler(navigation) }
+                }
+            ])
             console.log("else");
         }
     }
 
+    const logOutHandler = async (navigation) => {
+        await AsyncStorage.removeItem("Login")
+        navigation.replace("Login")
+    }
 
     return (
         <NavigationContainer>

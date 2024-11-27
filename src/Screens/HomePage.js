@@ -78,7 +78,17 @@ const HomePage = ({ navigation }) => {
 
     const changeScreen = (profile) => {
         if (profile == "My Tags" && !UserDetails?.login) {
-            Alert.alert("Alert", "Plese Login first")
+            Alert.alert("Alert", "Plese Login first", [
+                {
+                    text: "Cancel",
+                    style: 'cancel'
+                },
+                {
+                    text: "Login",
+                    // style: "destructive",
+                    onPress: () => { logOutHandler() }
+                }
+            ])
         } else {
             navigation.navigate(profile)
         }
