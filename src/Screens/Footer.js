@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useRoute, useNavigation } from '@react-navigation/native'; // Import hooks
+import Color from '../constant/Color';
 
 const Footer = ({ isScannerActive, setIsScannerActive }) => {
     const route = useRoute(); // Get current route
@@ -46,7 +47,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
-        backgroundColor: '#89f336',
+        backgroundColor: Color.Header_Fooler_Background_Color,
         height: 70,
         position: 'absolute',
         bottom: 0,

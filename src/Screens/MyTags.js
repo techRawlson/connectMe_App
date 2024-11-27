@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import axios from 'axios';
+import Color from '../constant/Color';
 
 const MyTags = () => {
     const [vehicles, setVehicles] = useState([]);  // State to hold vehicles
@@ -46,17 +47,17 @@ const MyTags = () => {
     const getVehicleIcon = (type) => {
         switch (type.toLowerCase()) {
             case 'car':
-                return <FontAwesome5 name="car" size={40} />;
+                return <FontAwesome5 name="car" size={40} color={styles.iconColor} />;
             case 'bus':
-                return <FontAwesome5 name="bus" size={40} />;
+                return <FontAwesome5 name="bus" size={40} color={styles.iconColor} />;
             case 'truck':
-                return <FontAwesome5 name="truck" size={40} />;
+                return <FontAwesome5 name="truck" size={40} color={styles.iconColor} />;
             case 'bike':
-                return <MaterialCommunityIcons name="motorbike" size={40} />;
+                return <MaterialCommunityIcons name="motorbike" size={40} color={styles.iconColor} />;
             case 'bicycle':
-                return <MaterialCommunityIcons name="bicycle" size={40} />;
+                return <MaterialCommunityIcons name="bicycle" size={40} color={styles.iconColor} />;
             default:
-                return <MaterialCommunityIcons name="car" size={40} />; // Default to car icon
+                return <MaterialCommunityIcons name="car" size={40} color={styles.iconColor} />; // Default to car icon
         }
     };
 
@@ -90,7 +91,7 @@ const MyTags = () => {
                     refreshControl={<RefreshControl refreshing={referse} onRefresh={getData} />}  // Handle pull to refresh
                 />
             </View>
-            <Footer />
+            {/* <Footer /> */}
         </View>
     );
 };
@@ -114,6 +115,7 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 3,
         borderWidth: 1,
+        borderColor: Color.Card_Border_Color
     },
     row: {
         flexDirection: 'row',
@@ -134,6 +136,8 @@ const styles = StyleSheet.create({
     },
     label: {
         fontWeight: 'bold',
-        color: '#333',
+        // color: '#333',
+        color: Color.Modal_Text_Color,
     },
+    iconColor: Color.Icon_Color
 });

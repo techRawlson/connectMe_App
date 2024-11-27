@@ -1,12 +1,12 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { FlatList, Image, StyleSheet, Text, View, TouchableOpacity, Dimensions, ScrollView, Alert } from 'react-native';
+import { Image, StyleSheet, Text, View, TouchableOpacity, Dimensions, ScrollView, Alert } from 'react-native';
 import url from '../constant/url';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Color from '../constant/Color';
 import { useSelector } from 'react-redux';
-import { Button } from 'react-native';
-import Buttons from '../compont/Buttons';
+import Bold from '../constant/Bold';
+import Font from '../constant/Font';
+import CustomButton from '../components/CustomButton';
 
 const ShopPage = ({ navigation }) => {
     const UserDetails = useSelector((item) => item.UserDetails)
@@ -20,7 +20,7 @@ const ShopPage = ({ navigation }) => {
         try {
             let URL = `${url}/api/shop/all`
             let res = (await axios.get(URL)).data;
-            console.log(res);
+            // console.log(res);
             setData(res)
 
         } catch (error) {
@@ -40,19 +40,23 @@ const ShopPage = ({ navigation }) => {
 
     const saveToCart = async (id, quantity) => {
         try {
-            if (quantity < 1) {
-                Alert.alert("Alert", "Select Valid Quantity")
-                return;
-            }
-            let URL = `${url}/api/cart/add`
-            let data = {
-                shopId: id,
-                quantity: quantity,
-                userId: UserDetails.number,
-            }
-            let res = (await axios.post(URL, data)).data;
-            console.log(res);
+            if (UserDetails?.login) {
 
+                if (quantity < 1) {
+                    Alert.alert("Alert", "Select Valid Quantity")
+                    return;
+                }
+                let URL = `${url}/api/cart/add`
+                let data = {
+                    shopId: id,
+                    quantity: quantity,
+                    userId: UserDetails.number,
+                }
+                let res = (await axios.post(URL, data)).data;
+                console.log(res);
+            } else {
+                Alert.alert("Alert", "Plese Login First")
+            }
         } catch (error) {
             console.error("Error Save to cart", error);
         }
@@ -61,66 +65,82 @@ const ShopPage = ({ navigation }) => {
     const handleIncrement = (id) => {
         setQuantities((prev) => ({
             ...prev,
-            [id]: (prev[id] || 0) + 1,
+            [id]: (prev[id] || 1) + 1,
         }));
     };
 
     const handleDecrement = (id) => {
         setQuantities((prev) => ({
             ...prev,
-            [id]: Math.max((prev[id] || 0) - 1, 0),
+            [id]: Math.max((prev[id] || 1) - 1, 0),
         }));
     };
+    const renderItem = (item, index) => {
+        const quantity = quantities[item.id] || 1;
+        const totalPrice = quantity * item.calculatedDiscountedPrice;
 
-    const renderItem = ({ item }) => {
-        const quantity = quantities[item.id] || 0;
         return (
-            <View style={styles.card}>
-                <Image style={styles.image} source={{ uri: `data:image/jpeg;base64,${item.imageBase64}` }} />
-                <View style={styles.textContainer}>
-                    <Text style={styles.title}>{item.productTitle}</Text>
-                    <Text style={styles.description}>{item.productDescription}</Text>
-                    <Text style={styles.price}><FontAwesome name='rupee' size={15} />{item.productPricing}</Text>
-                    <View style={styles.bottomRow}>
-                        <View style={styles.quantityContainer}>
-                            <TouchableOpacity style={styles.quantityButton} onPress={() => handleDecrement(item.id)}>
-                                <Text style={styles.quantityButtonText}>-</Text>
-                            </TouchableOpacity>
-                            <Text style={styles.quantityText}>{quantity}</Text>
-                            <TouchableOpacity style={styles.quantityButton} onPress={() => handleIncrement(item.id)}>
-                                <Text style={styles.quantityButtonText}>+</Text>
-                            </TouchableOpacity>
-                        </View>
-                        <View>
-                            <TouchableOpacity style={styles.quantityButton}
-                                onPress={() => saveToCart(item.id, quantity)}
-                            >
-                                <Text style={styles.quantityButtonText}>Add <FontAwesome name='rupee' /> {parseInt(quantity) * (item.productPricing)}</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
+            <View key={index} style={styles.itemContainer}>
+                {/* Product Image */}
+                <Image
+                    style={styles.productImage}
+                    // source={{ uri: `data:image/jpeg;base64,${item.imageBase64}` }}
+                    source={require("../../assrts/image/Card.png")}
+                />
+
+                {/* Product Details */}
+                <Text style={styles.productTitle}>{item.productTitle}</Text>
+                <Text style={styles.productDescription}>{item.productDescription}</Text>
+                <Text style={styles.pricing}>
+                    MRP: <Text style={styles.strikeThrough}>₹{item.priceIncludingGST}/-</Text>{' '}
+                    Sale Price: ₹{item.calculatedDiscountedPrice}/-  Save {item.discountPercentage}
+                </Text>
+
+                {/* Quantity and Total Price */}
+                <View style={styles.quantityContainer}>
+                    <TouchableOpacity
+                        style={styles.quantityButton}
+                        onPress={() => handleDecrement(item.id)}
+                    >
+                        <Text style={styles.quantityButtonText}>-</Text>
+                    </TouchableOpacity>
+                    <Text style={styles.quantityText}>{quantity}</Text>
+                    <TouchableOpacity
+                        style={styles.quantityButton}
+                        onPress={() => handleIncrement(item.id)}
+                    >
+                        <Text style={styles.quantityButtonText}>+</Text>
+                    </TouchableOpacity>
+                    <Text style={styles.totalPrice}>Total ₹{totalPrice}/-</Text>
+
+                    {/* Add to Cart Button */}
+                    <CustomButton
+                        title={"Add to Cart"}
+                        onPress={() => saveToCart(item.id, quantity)}
+
+                    />
                 </View>
             </View>
         );
     };
 
+
     return (
         <View style={styles.rootContainer}>
-            <Buttons title='View Cart' onClick={() => changeScreen()} bgColor={"red"} />
-
-            <ScrollView style={{ padding: 10 }}>
+            <ScrollView style={{ paddingHorizontal: 10, paddingTop: 5 }}>
                 <View style={styles.headerView}>
                     <Text style={styles.header}>Shop Now!</Text>
-                    <Text style={styles.dec}>
+                    {/* <Text style={styles.dec}>
                         Choose from all of our products and services.
-                    </Text>
+                    </Text> */}
                 </View>
-                <FlatList
-                    data={data}
-                    renderItem={renderItem}
-                    keyExtractor={(item) => item.id}
-                    contentContainerStyle={styles.listContainer}
-                />
+                {
+                    data.map((item, index) => {
+                        return (
+                            renderItem(item, index)
+                        )
+                    })
+                }
             </ScrollView>
         </View>
     );
@@ -139,85 +159,95 @@ const styles = StyleSheet.create({
         margin: "auto",
     },
     header: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: '#222',
-        // marginVertical: 15,
+        // fontSize: Font.HeaderFontSize,
+        fontSize: 20,
+        fontWeight: Bold.HeaderFontWeight,
+        color: Color.Header_Font_Color,
         textAlign: 'center',
     },
     dec: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#222',
+        fontSize: Font.LableFontSize,
+        fontWeight: Bold.LableFontWeight,
+        color: Color.Lable_Font_Color,
         marginVertical: 15,
         textAlign: 'center',
     },
-    listContainer: {
-        paddingBottom: 20,
-    },
-    card: {
-        flexDirection: 'row',
-        backgroundColor: '#ffffff',
-        borderRadius: 10,
+
+
+    itemContainer: {
+        backgroundColor: '#fff',
+        borderRadius: 8,
+        marginVertical: 8,
+        paddingTop: 5,
+        paddingHorizontal: 15,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
-        elevation: 3, // Android shadow
-        marginBottom: 15,
-        padding: 10,
+        elevation: 3, // Shadow for Android
     },
-    image: {
-        width: 100,
-        height: 100,
-        borderRadius: 8,
-        marginRight: 15,
-        objectFit: "contain",
-        marginTop: 20
+    productImage: {
+        width: '100%',
+        height: 150,
+        resizeMode: 'contain',
+        marginBottom: 2,
     },
-    textContainer: {
-        flex: 1,
-        justifyContent: 'space-between',
-    },
-    title: {
-        fontSize: 18,
-        fontWeight: '600',
-        color: '#333',
-    },
-    description: {
-        fontSize: 14,
-        color: '#777',
-        marginVertical: 5,
-    },
-    bottomRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    price: {
-        fontSize: 16,
+    productTitle: {
+        fontSize: Font.DataFontSize,
         fontWeight: 'bold',
-        color: '#28a745',
+        color: '#007bff',
+        marginBottom: 5,
+        // textDecorationLine: 'underline',
+    },
+    productDescription: {
+        fontSize: Font.SimpalFontSize,
+        color: '#555',
+        marginBottom: 10,
+    },
+    pricing: {
+        fontSize: 15,
+        // fontSize: Font.DataFontSize,
+        color: '#000',
+        marginBottom: 10,
+    },
+    strikeThrough: {
+        textDecorationLine: 'line-through',
+        color: '#888',
     },
     quantityContainer: {
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: 5,
     },
     quantityButton: {
-        backgroundColor: Color.Button_BackGroung_Color,
-        borderRadius: 5,
-        paddingHorizontal: 10,
-        paddingVertical: 5,
-        marginHorizontal: 5,
+        backgroundColor: '#e0e0e0',
+        padding: 8,
+        borderRadius: 4,
     },
     quantityButtonText: {
-        color: Color.Button_Text_Color,
         fontSize: 16,
-        fontWeight: 'bold',
+        color: '#000',
     },
     quantityText: {
         fontSize: 16,
         fontWeight: 'bold',
-        color: '#333',
+        color: '#000',
+    },
+    totalPrice: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#000',
+    },
+    addToCartButton: {
+        backgroundColor: '#007bff',
+        borderRadius: 5,
+        paddingVertical: 10,
+        alignItems: 'center',
+    },
+    addToCartText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
     },
 });

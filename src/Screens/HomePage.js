@@ -1,4 +1,4 @@
-import { FlatList, Image, Modal, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, FlatList, Image, Modal, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Entypo from 'react-native-vector-icons/Entypo'
@@ -14,10 +14,12 @@ import Color from '../constant/Color'
 import AnimatedImageSlider from './AnimatedImageSlider'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useSelector } from 'react-redux'
+import { useAsyncStorage } from '../hooks/useAsyncStorage'
 
 
 const HomePage = ({ navigation }) => {
 
+    const { getFromStorage } = useAsyncStorage()
     const UserDetails = useSelector((item) => item.UserDetails)
     console.log("userDetails", UserDetails);
 
@@ -75,7 +77,11 @@ const HomePage = ({ navigation }) => {
     };
 
     const changeScreen = (profile) => {
-        navigation.navigate(profile)
+        if (profile == "My Tags" && !UserDetails?.login) {
+            Alert.alert("Alert", "Plese Login first")
+        } else {
+            navigation.navigate(profile)
+        }
     }
 
     const logOutHandler = async () => {
@@ -85,44 +91,41 @@ const HomePage = ({ navigation }) => {
 
     let data = [
         // { title: "Profile", iconName: "user-alt", iconLable: "FontAwesome5" },
-        { title: "Demo", iconName: "youtube", iconLable: "AntDesign" },
+        { title: "Demo", iconName: "youtube", iconLable: "AntDesign", onPress: () => { changeScreen("Demo") } },
         { title: "Activate Tag", iconName: "tag", iconLable: "AntDesign", onPress: toggleScanner },
         { title: "Log out", iconName: "log-out", iconLable: "Entypo", onPress: logOutHandler },
-        { title: "Support", iconName: "headset", iconLable: "FontAwesome5" },
+        { title: "Support", iconName: "headset", iconLable: "FontAwesome5", onPress: () => { changeScreen("Support") } },
         { title: "Shop", iconName: "shopping-cart", iconLable: "FontAwesome5", onPress: () => { changeScreen("Shop Page") } },
         { title: "My Tags", iconName: "car", iconLable: "FontAwesome5", onPress: () => { changeScreen("My Tags") } },
 
-        { title: "Social", iconName: "twitter", iconLable: "AntDesign" },
+        { title: "Social", iconName: "twitter", iconLable: "AntDesign", onPress: () => { changeScreen("Social") } },
         { title: "About", iconName: "circle-with-cross", iconLable: "Entypo" },
-        { title: "Feq", iconName: "circle-with-cross", iconLable: "Entypo" },
+        { title: "FAQ", iconName: "info-circle", iconLable: "FontAwesome5", onPress: () => { changeScreen("Faq") } },
 
     ]
 
-    const getProfileData = async () => {
-        try {
-            console.log("getProfileData");
-            let savedData = JSON.parse(await AsyncStorage.getItem("Login"))
-            let number = savedData.number
-            // let URL = `http://192.168.1.111:8082/api/user-login/getUserLoginByMobile?loginMobileNumber=${number}`
-            // let data = (await axios.get(URL)).data
-            // console.log("pro", data);
-        } catch (error) {
-            console.error("Fetching Data Error", error);
-        }
-    }
-    useEffect(() => {
-        getProfileData()
-    }, [])
+    // const getProfileData = async () => {
+    //     try {
+    //         let URL = `http://192.168.1.111:8082/api/user-login/getUserLoginByMobile?loginMobileNumber=${UserDetails.number}`
+    //         let data = (await axios.get(URL)).data
+    //         console.log("pro", data);
+    //     } catch (error) {
+    //         console.error("Fetching Data Error", error);
+    //     }
+    // }
+    // useEffect(() => {
+    //     getProfileData()
+    // }, [])
 
     const RenderBox = ({ title, iconName, iconLable, onPress }) => {
         let Icon = IconMap[iconLable];
         return (
-            < View style={{ borderWidth: 1, borderColor: "#ddd", margin: "auto", marginBottom: 10, height: 80, width: 100, borderRadius: 10, padding: 10, }}>
+            < View style={styles.iconContainerView}>
                 <TouchableOpacity style={{ flex: 1 }} onPress={onPress}>
-                    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-                        <Icon name={iconName} size={30} />
+                    <View style={styles.iconView}>
+                        <Icon name={iconName} size={30} color={Color.Icon_Color} />
                     </View>
-                    <Text style={{ textAlign: "center" }}>{title}</Text>
+                    <Text style={styles.iconText}>{title}</Text>
                 </TouchableOpacity>
             </View >
         )
@@ -130,25 +133,26 @@ const HomePage = ({ navigation }) => {
 
     return (
         <View style={styles.rootContainer} >
-            {/* <ScrollView> */}
-            < View style={{ flex: 1, paddingHorizontal: 10 }}>
-                <View style={{ marginBottom: 50, overflow: "hidden" }}>
+            <View style={styles.childContainer}>
+                <View style={styles.animatedImageView}>
                     <AnimatedImageSlider />
                 </View>
-                <View style={{}}>
-                    <FlatList
-                        data={data}
-                        renderItem={({ item, index }) => {
-                            return (
-                                <RenderBox key={index} title={item.title} iconName={item.iconName} iconLable={item.iconLable} onPress={item.onPress ? item.onPress : () => item.onPress} />
-                            )
-                        }}
-                        numColumns={3}
-                    />
-
-                </View>
+                <FlatList
+                    data={data}
+                    renderItem={({ item, index }) => {
+                        return (
+                            <RenderBox
+                                key={index}
+                                title={item.title}
+                                iconName={item.iconName}
+                                iconLable={item.iconLable}
+                                onPress={item.onPress ? item.onPress : () => item.onPress}
+                            />
+                        )
+                    }}
+                    numColumns={3}
+                />
             </View>
-            {/* </ScrollView> */}
             <Footer
                 isScannerActive={isScannerActive}
                 setIsScannerActive={setIsScannerActive}
@@ -161,17 +165,14 @@ const HomePage = ({ navigation }) => {
                 onRequestClose={() => setIsScannerActive(false)
                 }
             >
-                <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-                    {/* <View style={{}}> */}
+                <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(0, 0, 0,0.7)" }}>
                     <QRCodeScanner
                         onRead={(data) => getIdFromUrl(data.data)}
                         reactivate={true}
                         reactivateTimeout={500}
                         showMarker={true}
                     />
-                    {/* </View> */}
                 </View>
-
             </Modal >
         </View >
     )
@@ -180,57 +181,36 @@ const HomePage = ({ navigation }) => {
 export default HomePage
 
 const styles = StyleSheet.create({
-
-    container: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    centerText: {
-        fontSize: 16,
-        margin: 10,
-        textAlign: "center",
-    },
-    button: {
-        marginTop: 20,
-        backgroundColor: "#007bff",
-        padding: 10,
-        borderRadius: 5,
-    },
-    buttonText: {
-        color: "#fff",
-        fontSize: 16,
-    },
-
-
-
     rootContainer: {
         flex: 1,
         // paddingHorizontal: 10,
         paddingTop: 20
     },
-    buttonViewContainer: {
+    childContainer: {
         flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
+        marginHorizontal: 10
     },
-    buttonView: {
-        alignItems: "center",
-        // borderWidth: 0.3,
-        padding: 10,
-        borderRadius: 15,
+    animatedImageView: {
+        marginBottom: 50,
+        marginHorizontal: 10,
         overflow: "hidden",
-        backgroundColor: Color.Button_BackGroung_Color,
-        elevation: 5,
-
+        borderRadius: 20,
+    },
+    iconContainerView: {
+        margin: "auto",
+        marginBottom: 15,
+        height: 80,
+        width: 100,
+        borderRadius: 10,
+        padding: 10,
     },
     iconView: {
-
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center"
     },
-    textView: {
-
-    },
-    text: {
-        color: Color.Button_Text_Color
-    },
+    iconText: {
+        color: Color.Icon_Text,
+        alignSelf: "center",
+    }
 })

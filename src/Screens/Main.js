@@ -1,10 +1,11 @@
-import { Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { useSelector } from 'react-redux';
+import { Alert, Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { useDispatch, useSelector } from 'react-redux';
 import React, { useEffect, useState } from 'react'
 
 import { NavigationContainer, StackActions } from '@react-navigation/native'
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import Feather from 'react-native-vector-icons/Feather';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import HomePage from './HomePage';
 import ActivateTag from './ActivateTag';
@@ -15,27 +16,77 @@ import Profile from './Profile';
 import MyTags from './MyTags';
 import ShopPage from './ShopPage';
 import CartPage from './CartPage';
+import Demo from './Demo';
+import Feq from './Feq';
+import Support from './Support';
+import { setUserDetails } from '../Redux/action';
+import { useAsyncStorage } from '../hooks/useAsyncStorage';
+import Social from './Social';
+
 
 const Stack = createNativeStackNavigator();
 
 
 
 const Main = () => {
-    const changeScreen = (navigation) => {
-        navigation.navigate("Profile")
+    const dispatch = useDispatch();
+
+    const UserDetails = useSelector(item => item.UserDetails)
+    // console.log("Main", UserDetails);
+    const { saveToStorage, getFromStorage } = useAsyncStorage();
+
+    useEffect(() => {
+        const checkLogin = async () => {
+            try {
+                // let userData = JSON.parse(await AsyncStorage.getItem("Login"))
+
+                const userData = await getFromStorage("Login");
+                console.log("userData", userData);
+
+                if (userData?.login) {
+                    console.log("Logins", userData);
+                    dispatch(setUserDetails(userData));
+                    // navigation.replace("Home Page");
+                }
+            } catch (error) {
+                console.error("Error Fetching Data from Storage", error);
+            }
+        };
+        checkLogin();
+    }, []);
+
+    const changeScreen = (navigation, screenName) => {
+
+        if (UserDetails?.login) {
+            navigation.navigate(screenName)
+        } else {
+            Alert.alert("Alert", "Plese login first")
+            console.log("else");
+        }
     }
 
 
     return (
         <NavigationContainer>
             <Stack.Navigator
-                screenOptions={{ headerStyle: { backgroundColor: Color.Header_Fooler_Background_Color, }, headerTintColor: "black", }}
+                initialRouteName='Home Page'
+                screenOptions={{
+                    headerStyle: {
+                        backgroundColor: Color.Header_Fooler_Background_Color,
+                    },
+                    headerTintColor: "black",
+                    headerBackVisible: true,
+                    headerTitle: "",
+                    headerLeft: () => (
+                        <Image style={styles.logoImage} source={require("../../assrts/image/easylogo.png")} />
+                    ),
+                }}
             >
                 <Stack.Screen
                     name='Login'
                     component={LoginScreen}
                     options={{
-                        headerTitle: "My Tag...",
+                        headerShown: false
                     }}
                 />
 
@@ -43,9 +94,8 @@ const Main = () => {
                     name='Home Page'
                     component={HomePage}
                     options={({ navigation }) => ({
-                        headerTitle: "Home Page",
                         headerRight: () => (
-                            <TouchableOpacity onPress={() => changeScreen(navigation)}>
+                            <TouchableOpacity onPress={() => changeScreen(navigation, "Profile")}>
                                 <View style={{ borderRadius: 25 }}>
                                     <Image style={{ height: 35, width: 35 }} source={require("../../assrts/image/ProfileIcon.png")} />
                                 </View>
@@ -58,7 +108,6 @@ const Main = () => {
                     name='Activate Tag'
                     component={ActivateTag}
                     options={{
-                        headerTitle: "",
                         headerRight: () => (
                             <TouchableOpacity>
                                 <Feather name='list' size={25} />
@@ -68,7 +117,6 @@ const Main = () => {
                 <Stack.Screen
                     name='Profile'
                     component={Profile}
-                    options={{ headerTitle: "" }}
                 />
                 <Stack.Screen
                     name='My Tags'
@@ -82,11 +130,24 @@ const Main = () => {
                 <Stack.Screen
                     name='Shop Page'
                     component={ShopPage}
+                    options={({ navigation }) => ({
+                        headerRight: () => (
+                            <FontAwesome name='shopping-cart' size={23} onPress={() => changeScreen(navigation, "Cart Page")} />
+                        )
+                    })}
                 />
                 <Stack.Screen
                     name='Cart Page'
                     component={CartPage}
                 />
+                <Stack.Screen name='Demo' component={Demo} />
+                <Stack.Screen name='Faq' component={Feq} />
+                <Stack.Screen name='Support' component={Support}
+                    options={{
+                        headerLeft: () => ""
+                    }}
+                />
+                <Stack.Screen name='Social' component={Social} />
             </Stack.Navigator>
         </NavigationContainer>
     )
@@ -94,4 +155,11 @@ const Main = () => {
 
 export default Main
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    logoImage: {
+        height: 50,
+        width: 100,
+        objectFit: "contain"
+
+    }
+})

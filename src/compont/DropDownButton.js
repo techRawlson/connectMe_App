@@ -81,21 +81,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: 10,
         position: "absolute",
-        borderColor: Color.Button_BackGroung_Color,
+        borderColor: Color.Button_Border_Color,
         // backgroundColor: "white",
         backgroundColor: Color.Modal_Background_Color,
         zIndex: 1
-    },
-    searchInput: {
-        color: "black",
-        paddingHorizontal: 10,
-        paddingVertical: 0,
-        borderRadius: 3,
-        backgroundColor: "white",
-        elevation: 5,
-    },
-    searchInputView: {
-        marginBottom: 10
     },
     itemScrollView: {
         paddingHorizontal: 5,
@@ -105,11 +94,12 @@ const styles = StyleSheet.create({
     dropdownItem: {
         paddingVertical: 5,
         paddingHorizontal: 5,
-        color: Color.Button_BackGroung_Color
+        color: Color.Simple_Text_Color
     },
     dropdownItemView: {
         borderTopWidth: 0.5,
-        borderColor: Color.Button_BackGroung_Color
+        borderColor: Color.Button_Border_Color
+        // borderColor: "red"
     },
 
 })

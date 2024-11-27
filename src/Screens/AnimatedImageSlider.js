@@ -10,10 +10,11 @@ import {
 } from "react-native";
 
 const images = [
-    // { id: 1, uri: require("../../assrts/image/Image1.jpg") },
-    { id: 2, url: require("../../assrts/image/Image2.jpg") },
-    { id: 3, url: require("../../assrts/image/Image3.jpg") },
-    { id: 3, url: require("../../assrts/image/Image4.jpg") },
+    // { id: 1, uri: require("../../assrts/image/Image1.png") },
+    { id: 2, url: require("../../assrts/image/Image2.png") },
+    { id: 3, url: require("../../assrts/image/Image3.png") },
+    { id: 3, url: require("../../assrts/image/Image4.png") },
+    // { id: 3, url: require("../../assrts/image/Image5.png") },
 ];
 
 const AnimatedImageSlider = () => {
@@ -56,6 +57,7 @@ const AnimatedImageSlider = () => {
     return (
         <View style={styles.container}>
             {/* Animated Image Slider */}
+
             <Animated.View
                 style={[
                     styles.sliderContainer,

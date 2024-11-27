@@ -265,7 +265,7 @@ const ContactVehicleOwner = (probs) => {
                         {/* Modal Header */}
                         <View style={styles.modalHeader}>
                             <Text style={styles.modalHeading}>Vehicle Details Form</Text>
-                            <Ionicons name='close' color={Color.Button_BackGroung_Color} size={30} onPress={closeModal} />
+                            <Ionicons name='close' color={Color.Button_Background_Color} size={30} onPress={closeModal} />
                         </View>
 
                         {/* Car Number Input */}
@@ -369,7 +369,7 @@ const ContactVehicleOwner = (probs) => {
                         <View style={{ borderWidth: 0.5, borderColor: "white" }}></View>
 
                         <View style={styles.buttonContainer}>
-                            <Text style={{ color: Color.Button_BackGroung_Color }} onPress={() => setConnectingCallModal(false)}>Close</Text>
+                            <Text style={{ color: Color.Button_Background_Color }} onPress={() => setConnectingCallModal(false)}>Close</Text>
                         </View>
                     </View>
                 </View>
@@ -430,7 +430,7 @@ const styles = StyleSheet.create({
         elevation: 4,
     },
     selectedItem: {
-        backgroundColor: Color.Button_BackGroung_Color, // Highlight color for selected item
+        backgroundColor: Color.Button_Background_Color, // Highlight color for selected item
         borderWidth: 3,
         borderColor: "gray"
     },
@@ -498,7 +498,7 @@ const styles = StyleSheet.create({
     modalHeading: {
         fontSize: 20,
         fontWeight: 'bold',
-        color: Color.Button_BackGroung_Color,
+        color: Color.Button_Background_Color,
         textAlign: "center",
         flex: 1,
     },
@@ -516,23 +516,23 @@ const styles = StyleSheet.create({
     modallabelText: {
         fontSize: 16,
         fontWeight: '600',
-        color: Color.Button_BackGroung_Color,
+        color: Color.Button_Background_Color,
         marginBottom: 5,
     },
     carNumberPreview: {
         fontSize: 16,
         fontWeight: '700',
-        color: Color.Button_BackGroung_Color,
+        color: Color.Button_Background_Color,
         marginBottom: 5,
     },
     textInput: {
         borderWidth: 1,
-        borderColor: Color.Button_BackGroung_Color,
+        borderColor: Color.Button_Background_Color,
         borderRadius: 8,
         padding: 10,
         fontSize: 16,
         backgroundColor: "black",
-        color: Color.Button_BackGroung_Color,
+        color: Color.Button_Background_Color,
     },
     infoText: {
         fontSize: 14,

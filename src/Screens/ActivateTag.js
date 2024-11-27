@@ -162,11 +162,11 @@ const ActivateTag = (probs) => {
                             </View>
 
 
-                            <Buttons title={"Verify OTP"} bgColor={Color.Button_BackGroung_Color} textColor={Color.Button_Text_Color} onClick={verifyOtpHandler} />
+                            <Buttons title={"Verify OTP"} bgColor={Color.Button_Background_Color} textColor={Color.Button_Text_Color} onClick={verifyOtpHandler} />
                         </>
 
                     ) : (
-                        <Buttons title={"Send OTP"} bgColor={Color.Button_BackGroung_Color} textColor={Color.Button_Text_Color} onClick={sendOtpHandler} />
+                        <Buttons title={"Send OTP"} bgColor={Color.Button_Background_Color} textColor={Color.Button_Text_Color} onClick={sendOtpHandler} />
                     )
                 )}
 
@@ -204,7 +204,7 @@ const ActivateTag = (probs) => {
                         {/* Submit Button */}
                         <Buttons
                             title="Submit"
-                            bgColor={Color.Button_BackGroung_Color}
+                            bgColor={Color.Button_Background_Color}
                             textColor={Color.Button_Text_Color}
                             onClick={submitButtonHandler}
                         />
@@ -224,7 +224,9 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     card: {
-        backgroundColor: "#fff",
+        backgroundColor: Color.Card_Background_Color,
+        borderColor: Color.Card_Border_Color,
+        borderWidth: 0.5,
         borderRadius: 10,
         padding: 20,
         shadowColor: "#000",

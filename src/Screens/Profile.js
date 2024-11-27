@@ -15,6 +15,7 @@ import {
     View,
 } from "react-native";
 import { launchImageLibrary } from "react-native-image-picker";
+import Color from "../constant/Color";
 
 // http://api/user-login/getUserByMobile/?loginMobileNumber=${localstorage.getItem(%27loginMobileNumber%27)}
 
@@ -40,6 +41,7 @@ const Profile = () => {
             let newData = JSON.parse(data);
 
             let URL = `http://192.168.1.111:8082/api/user-login/getUserLoginByMobile?loginMobileNumber=${newData.number}`;
+
 
             let res = await (await axios.get(URL)).data;
 
@@ -112,21 +114,22 @@ const Profile = () => {
     const toggleEditSave = async () => {
         if (isEditing) {
             try {
-                const newFormData = new FormData(formData);
+                const newFormData = new FormData();
                 newFormData.append("name", formData.name);
                 newFormData.append("email", formData.email);
 
-                // Append the selected file
-                const file = {
-                    uri: formData.fileUri, // File URI
-                    type: formData.fileType, // MIME type
-                    name: formData.fileName, // File name
-                };
-                newFormData.append("file", file);
+                if (formData.fileUri) {
+                    const file = {
+                        uri: formData.fileUri,
+                        type: formData.fileType,
+                        name: formData.fileName,
+                    };
+                    newFormData.append("file", file);
+                }
 
                 const URL = `http://192.168.1.111:8082/api/user-login/${formData.loginMobileNumber}`;
-                // console.log("formData", newFormData);
 
+                console.log("Sending FormData...");
                 const response = await axios.put(URL, newFormData, {
                     headers: {
                         "Content-Type": "multipart/form-data",
@@ -134,12 +137,15 @@ const Profile = () => {
                 });
 
                 console.log("Response Data:", response.data);
+                alert("Profile updated successfully!");
             } catch (error) {
                 console.error("Error saving data:", error);
+                alert("Failed to save profile. Please try again.");
             }
         }
         setIsEditing(!isEditing);
     };
+
 
 
 
@@ -180,16 +186,16 @@ const Profile = () => {
                         />
                     </View>
                     {/* <View style={styles.inputView}>
-                        <Text style={styles.labelText}>Vehicle Number</Text>
-                        <TextInput
-                            style={styles.textInput}
-                            placeholder="Enter vehicle number"
-                            placeholderTextColor="#aaa"
-                            editable={isEditing}
-                            value={formData.vehicleNumber}
-                            onChangeText={(text) => handleInputChange("vehicleNumber", text)}
-                        />
-                    </View> */}
+                            <Text style={styles.labelText}>Vehicle Number</Text>
+                            <TextInput
+                                style={styles.textInput}
+                                placeholder="Enter vehicle number"
+                                placeholderTextColor="#aaa"
+                                editable={isEditing}
+                                value={formData.vehicleNumber}
+                                onChangeText={(text) => handleInputChange("vehicleNumber", text)}
+                            />
+                        </View> */}
                     <View style={styles.inputView}>
                         <Text style={styles.labelText}>Email</Text>
                         <TextInput
@@ -225,7 +231,7 @@ const Profile = () => {
                             </Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            style={[styles.button, styles.cancelButton]}
+                            style={[styles.button]}
                             onPress={() => {
                                 setIsEditing(false);
                                 console.log("Edit Cancelled");
@@ -269,7 +275,7 @@ const styles = StyleSheet.create({
     image: {
         height: 100,
         width: 100,
-        borderRadius: 50, // Circular image
+        // borderRadius: 50, // Circular image
     },
     labelText: {
         paddingLeft: 10,
@@ -298,7 +304,8 @@ const styles = StyleSheet.create({
     },
     button: {
         flex: 1,
-        backgroundColor: "#28a745",
+        // backgroundColor: "#28a745",
+        backgroundColor: Color.Button_Background_Color,
         paddingVertical: 10,
         paddingHorizontal: 15,
         borderRadius: 10,

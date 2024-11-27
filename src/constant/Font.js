@@ -1,8 +1,8 @@
 export default Color = {
-    HeaderFontSize:15,
-    LableFontSize:15,
-    DataFontSize:15,
-    SimpalFontSize:16,
-    ButtonFontSize:15,
+    HeaderFontSize: 24,
+    LableFontSize: 20,
+    DataFontSize: 18,
+    SimpalFontSize: 15,
+    ButtonFontSize: 15,
 }
 // StyleSheet.create({})
