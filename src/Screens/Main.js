@@ -6,6 +6,7 @@ import { NavigationContainer, StackActions } from '@react-navigation/native'
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Entypo from 'react-native-vector-icons/Entypo';
 
 import HomePage from './HomePage';
 import ActivateTag from './ActivateTag';
@@ -27,6 +28,7 @@ import HomePageLogoImage from '../components/HomePageLogoImage';
 import url from '../constant/url';
 import axios from 'axios';
 import CheckoutPage from './CheckoutPage';
+import AddressPage from './AddressPage';
 
 
 const Stack = createNativeStackNavigator();
@@ -38,7 +40,8 @@ const Main = () => {
 
     const CartItemCount = useSelector(item => item.CartItemCount);
     const UserDetails = useSelector(item => item.UserDetails)
-    // console.log("Main", UserDetails);
+    const [profileImage, setProfileImage] = useState("")
+
     const { saveToStorage, getFromStorage } = useAsyncStorage();
 
     const checkLogin = async () => {
@@ -62,21 +65,34 @@ const Main = () => {
                 if (data.length > 0) {
                     dispatch(setCartItemCount(data.length))
                 }
-                // console.log("Cart Data", URL);
-                // console.log("Cart Data", data.length);
             }
         } catch (error) {
             console.error("Error fetching Cart item length", error);
         }
     };
 
+    const profileImageHandler = async () => {
+        try {
+            let URL = `http://192.168.1.111:8082/api/user-login/getUserLoginByMobile?loginMobileNumber=${UserDetails.number}`;
+            console.log(URL);
+            let res = await (await axios.get(URL)).data;
+            setProfileImage(res.file);
+        } catch (error) {
+            console.error("Error in Fetching Image Data", error);
+        }
+    }
+
 
     useEffect(() => {
         checkLogin();
     }, []);
     useEffect(() => {
-        countCartItem();
+        if (UserDetails.number) {
+            countCartItem();
+            profileImageHandler();
+        }
     }, [UserDetails.number]);
+
 
 
     const changeScreen = (navigation, screenName) => {
@@ -136,7 +152,12 @@ const Main = () => {
                         headerRight: () => (
                             <TouchableOpacity onPress={() => changeScreen(navigation, "Profile")}>
                                 <View style={{ borderRadius: 25 }}>
-                                    <Image style={{ height: 35, width: 35 }} source={require("../../assrts/image/ProfileIcon.png")} />
+                                    {UserDetails?.login ?
+                                        <Image
+                                            style={{ height: 35, width: 35, borderRadius: 5 }}
+                                            source={profileImage ? { uri: `data:image/jpeg;base64,${profileImage}` } : require("../../assrts/image/ProfileIcon.png")}
+                                        />
+                                        : <Entypo name='login' size={28} onPress={() => logOutHandler(navigation)} />}
                                 </View>
                             </TouchableOpacity>
                         ),
@@ -164,6 +185,10 @@ const Main = () => {
                 <Stack.Screen
                     name='Contact Vehicle Owner'
                     component={ContactVehicleOwner}
+                    options={{
+                        headerStyle: {},
+                        headerLeft: () => ""
+                    }}
                 />
 
                 <Stack.Screen
@@ -176,11 +201,13 @@ const Main = () => {
                         // )
 
                         headerRight: () => (
-                            <View style={{ flexDirection: "row", alignItems: "center" }}>
+                            <TouchableOpacity
+                                style={{ flexDirection: "row", alignItems: "center" }}
+                                onPress={() => navigation.navigate("Cart Page")}
+                            >
                                 <FontAwesome
                                     name="shopping-cart"
                                     size={23}
-                                    onPress={() => navigation.navigate("Cart Page")}
                                 />
                                 {CartItemCount > 0 && (
                                     <View
@@ -194,7 +221,7 @@ const Main = () => {
                                         <Text style={{ color: "white", fontSize: 12 }}>{CartItemCount}</Text>
                                     </View>
                                 )}
-                            </View>
+                            </TouchableOpacity>
                         ),
                     })}
                 />
@@ -214,6 +241,7 @@ const Main = () => {
                     }}
                 />
                 <Stack.Screen name='Social' component={Social} />
+                <Stack.Screen name='Address Page' component={AddressPage} />
                 <Stack.Screen name='Checkout Page' component={CheckoutPage} />
             </Stack.Navigator>
         </NavigationContainer>

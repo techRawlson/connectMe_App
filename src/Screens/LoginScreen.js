@@ -20,6 +20,8 @@ import { useOtp } from "../hooks/useOtp";
 import Font from "../constant/Font";
 import HomePageLogoImage from "../components/HomePageLogoImage";
 import { useNavigation } from "@react-navigation/native";
+import url from "../constant/url";
+import axios from "axios";
 
 const LoginScreen = ({ navigation }) => {
     const { width, height } = useWindowDimensions();
@@ -60,10 +62,32 @@ const LoginScreen = ({ navigation }) => {
 
     const handleVerifyOtp = async () => {
         if (ownerOtp === sendedOTP) {
-            const userData = { login: true, number: mobileNumber };
-            await saveToStorage("Login", JSON.stringify(userData));
-            dispatch(setUserDetails(userData));
-            navigation.replace("Home Page");
+            try {
+                const URL = `${url}/api/user-login`
+                const formData = new FormData();
+
+                formData.append("loginMobileNumber", mobileNumber)
+
+                await axios.post(URL, formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    }
+                })
+
+                const userData = { login: true, number: mobileNumber };
+                await saveToStorage("Login", JSON.stringify(userData));
+                dispatch(setUserDetails(userData));
+                navigation.replace("Home Page");
+            } catch (error) {
+                if (error.status == 409) {
+                    const userData = { login: true, number: mobileNumber };
+                    await saveToStorage("Login", JSON.stringify(userData));
+                    dispatch(setUserDetails(userData));
+                    navigation.replace("Home Page");
+                } else {
+                    console.error("Error to login", error);
+                }
+            }
         } else {
             Alert.alert("Alert", "Invalid OTP. Please try again.");
         }

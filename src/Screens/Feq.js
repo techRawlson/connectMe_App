@@ -42,8 +42,7 @@ const Feq = () => {
 
     return (
         <View style={styles.container}>
-            <HomePageLogoImage style={{height:100,width:100,objectFit:"contain"}} />
-            <FlatList
+            <FlatList   
                 style={{ padding: 20, }}
                 data={faqData}
                 keyExtractor={(item, index) => index.toString()}

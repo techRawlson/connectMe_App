@@ -110,7 +110,7 @@ const HomePage = ({ navigation }) => {
         { title: "Shop", iconName: "shopping-cart", iconLable: "FontAwesome5", onPress: () => { changeScreen("Shop Page") } },
         { title: "My Tags", iconName: "car", iconLable: "FontAwesome5", onPress: () => { changeScreen("My Tags") } },
         { title: "Social", iconName: "twitter", iconLable: "AntDesign", onPress: () => { changeScreen("Social") } },
-        { title: "About", iconName: "circle-with-cross", iconLable: "Entypo" },
+        { title: "About", iconName: "message-alert", iconLable: "MaterialCommunityIcons" },
         { title: "FAQ", iconName: "info-circle", iconLable: "FontAwesome5", onPress: () => { changeScreen("Faq") } },
 
     ]

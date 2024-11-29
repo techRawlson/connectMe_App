@@ -8,6 +8,7 @@ import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import DropDownButton from '../compont/DropDownButton'
 import Footer from './Footer'
+import CustomButton from '../components/CustomButton'
 
 const ActivateTag = (probs) => {
     const [selectedVehicleType, setSelectedVehicleType] = useState(""); // State to hold selected vehicle type
@@ -161,12 +162,11 @@ const ActivateTag = (probs) => {
                                 />
                             </View>
 
-
-                            <Buttons title={"Verify OTP"} bgColor={Color.Button_Background_Color} textColor={Color.Button_Text_Color} onClick={verifyOtpHandler} />
+                            <CustomButton title={"Verify OTP"} onPress={verifyOtpHandler} />
                         </>
 
                     ) : (
-                        <Buttons title={"Send OTP"} bgColor={Color.Button_Background_Color} textColor={Color.Button_Text_Color} onClick={sendOtpHandler} />
+                        <CustomButton title={"Send OTP"} onPress={sendOtpHandler} />
                     )
                 )}
 
@@ -202,12 +202,7 @@ const ActivateTag = (probs) => {
                         </View>
 
                         {/* Submit Button */}
-                        <Buttons
-                            title="Submit"
-                            bgColor={Color.Button_Background_Color}
-                            textColor={Color.Button_Text_Color}
-                            onClick={submitButtonHandler}
-                        />
+                        <CustomButton title={"Submit"} onPress={submitButtonHandler} />
                     </>
                 )}
             </View>

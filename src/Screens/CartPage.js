@@ -127,41 +127,27 @@ const CartPage = ({ navigation }) => {
 
         <Text style={styles.productTitle}>{item.productTittle}</Text>
         <Text style={styles.productDescription}>{item.productDescription}</Text>
-        {/* <Text style={styles.pricing}>
-          <Text style={[styles.strikeThrough]}>₹{item.productDiscountPrice}/-</Text>{'     '}
-          Sale Price:<Text style={styles.totalPrice}>₹{item.productCalculatedDiscountedPrice}/-</Text>   Save {item.productDiscountPercentage.toString().split(".")[0]}%
-          </Text> */}
         <View style={{ flexDirection: "row" }}>
           <Text style={[styles.pricing, styles.strikeThrough]}>₹{item.productPricing}/-</Text>
           <Text style={styles.pricing}>Sale Price: <Text>₹{item.productCalculatedDiscountedPrice}/-</Text></Text>
           <Text style={[styles.pricing, styles.totalPrice]}>Save {item.productDiscountPercentage.toString().split(".")[0]}%</Text>
         </View>
         <View style={styles.quantityContainer}>
-          {/* <TouchableOpacity
-            style={styles.quantityButton}
-            onPress={() => handleDecreaseQuantity(item.id)}
-          >
-            <Text style={styles.quantityButtonText}>-</Text>
-          </TouchableOpacity>
-          <Text style={styles.quantityText}>{item.quantity}</Text> */}
-          {/* <TouchableOpacity
-            style={styles.quantityButton}
-            onPress={() => handleIncreaseQuantity(item.id)}
-          >
-            <Text style={styles.quantityButtonText}>+</Text>
-          </TouchableOpacity> */}
           <View style={[styles.quantityContainer, { marginBottom: 0 }]}>
             <CustomButton title={"-"} onPress={() => handleDecreaseQuantity(item.id)} />
             <Text style={styles.quantityText}>{item.quantity}</Text>
             <CustomButton title={"+"} onPress={() => handleIncreaseQuantity(item.id)} />
           </View>
-
-          {/* <Text style={styles.totalPrice}>Total ₹{totalPrice}/-</Text> */}
           < CustomButton title={<MaterialIcons name="delete" size={20} />} />
         </View>
       </View>
     );
   };
+
+
+  const changeScreen = (screenName) => {
+    navigation.navigate(screenName)
+  }
 
   return (
     <View style={styles.rootContainer}>
@@ -178,7 +164,7 @@ const CartPage = ({ navigation }) => {
           <Text style={styles.noDataText}>No data found</Text>
           <TouchableOpacity
             style={styles.shopButton}
-            onPress={() => navigation.navigate("Shop Page")}
+            onPress={() => changeScreen("Shop Page")}
           >
             <Text style={styles.shopButtonText}>Go to Shop</Text>
           </TouchableOpacity>
@@ -187,7 +173,7 @@ const CartPage = ({ navigation }) => {
       {cartProducts.length > 0 && (
         <View style={styles.summaryContainer}>
           <Text style={styles.totalLabel}>Subtotal: ₹ {calculateTotalPrice()}</Text>
-          <CustomButton title={"Proceed to Checkout"} />
+          <CustomButton title={"Proceed to Checkout"} onPress={() => changeScreen("Address Page")} />
         </View>
       )}
       {/* </ScrollView> */}

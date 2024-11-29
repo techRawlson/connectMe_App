@@ -16,10 +16,13 @@ import {
 } from "react-native";
 import { launchImageLibrary } from "react-native-image-picker";
 import Color from "../constant/Color";
-
+import CustomButton from "../components/CustomButton";
+import ChangeScreen from "../hooks/ChangeScreen";
 // http://api/user-login/getUserByMobile/?loginMobileNumber=${localstorage.getItem(%27loginMobileNumber%27)}
 
-const Profile = () => {
+const Profile = ({ navigation }) => {
+
+    const { ChangeScreenHandler, Logout } = ChangeScreen()
 
 
     const [isEditing, setIsEditing] = useState(false); // State to toggle between edit and save mode
@@ -41,7 +44,6 @@ const Profile = () => {
             let newData = JSON.parse(data);
 
             let URL = `http://192.168.1.111:8082/api/user-login/getUserLoginByMobile?loginMobileNumber=${newData.number}`;
-
 
             let res = await (await axios.get(URL)).data;
 
@@ -146,7 +148,12 @@ const Profile = () => {
         setIsEditing(!isEditing);
     };
 
+    // const logOutHandler = async () => {
+    //     await AsyncStorage.removeItem("Login")
+    //     dispatch(setUserDetails({}));
+    //     navigation.replace("Login")
 
+    // }
 
 
 
@@ -222,15 +229,20 @@ const Profile = () => {
 
                     {/* Buttons */}
                     <View style={styles.buttonContainer}>
-                        <TouchableOpacity
-                            style={styles.button}
+                        <View style={styles.button}>
+                            <CustomButton title={isEditing ? "Save" : "Edit"} onPress={toggleEditSave} />
+                        </View>
+                        <View style={styles.button}>
+                            <CustomButton title={isEditing ? "Cancel" : "Logout"} onPress={() => isEditing ? setIsEditing(false) : Logout()} />
+                        </View>
+                        {/* <TouchableOpacity
                             onPress={toggleEditSave}
                         >
                             <Text style={styles.buttonText}>
                                 {isEditing ? "Save" : "Edit"}
                             </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
+                        </TouchableOpacity> */}
+                        {/* <TouchableOpacity
                             style={[styles.button]}
                             onPress={() => {
                                 setIsEditing(false);
@@ -239,7 +251,7 @@ const Profile = () => {
                             disabled={!isEditing}
                         >
                             <Text style={styles.buttonText}>Cancel</Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </View>
                 </View>
             </ScrollView>
@@ -261,7 +273,7 @@ const styles = StyleSheet.create({
         width: Dimensions.get("window").width - 50,
         padding: 20,
         borderRadius: 20,
-        
+
         backgroundColor: "#fff",
         elevation: 5, // Shadow for Android
         shadowColor: "#000", // Shadow for iOS
@@ -276,7 +288,7 @@ const styles = StyleSheet.create({
     image: {
         height: 100,
         width: 100,
-        // borderRadius: 50, // Circular image
+        borderRadius: 5, // Circular image
     },
     labelText: {
         paddingLeft: 10,
@@ -304,14 +316,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     button: {
-        flex: 1,
-        // backgroundColor: "#28a745",
-        backgroundColor: Color.Button_Background_Color,
-        paddingVertical: 10,
-        paddingHorizontal: 15,
-        borderRadius: 10,
-        alignItems: "center",
-        marginHorizontal: 5,
+        width: 110,
     },
     cancelButton: {
         backgroundColor: "#dc3545",

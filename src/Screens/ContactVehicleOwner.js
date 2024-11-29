@@ -21,6 +21,8 @@ const ContactVehicleOwner = (probs) => {
     const { width, height, fontScale, scale } = useWindowDimensions()
 
     let [ownerData, setOwnerData] = useState(probs?.route?.params?.data)
+    console.log("ownerData", ownerData);
+
 
     // let [ownerData, setOwnerData] = useState({ "carDetails": "Hero", "enabled": true, "id": 8, "name": "Himanshu ", "phoneNumber": "9354111045", "qrCode": { "file": "=", "fileName": "QRCode_2.png", "fileType": "Image", "id": 14, "qrCodeUrl": "http://192.168.1.111:5173/activation/?id=lcqi5EgEJx", "uniqueId": "lcqi5EgEJx", "used": true }, "vehicleNumber": "HR22G8116" })
 
@@ -230,7 +232,7 @@ const ContactVehicleOwner = (probs) => {
                         <HomePageLogoImage style={styles.logoImage} />
                     </View>
                     <View style={styles.headerTextView}>
-                        <Text style={styles.headerText}>Vehicle Details</Text>
+                        {/* <Text style={styles.headerText}>Vehicle Details</Text> */}
                     </View>
                     <View style={[styles.detailsViewContainer, { width: width - 100 }]}>
                         <View style={styles.detailsView}>
