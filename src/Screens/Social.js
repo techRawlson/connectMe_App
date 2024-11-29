@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, Text, View, Pressable, Linking, TouchableOpacity, Image } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Color from "../constant/Color";
+import { RecyclerViewBackedScrollView } from "react-native";
 
 const Social = () => {
 
@@ -33,23 +34,6 @@ const Social = () => {
         },
     ];
 
-    const getVehicleIcon = (type) => {
-        switch (type.toLowerCase()) {
-            case "instagram":
-                return <FontAwesome name="instagram" size={40} color={styles.iconColor} />;
-            case "facebook":
-                return <FontAwesome name="facebook-square" size={40} color={styles.iconColor} />;
-            case "youtube":
-                return <FontAwesome name="youtube-play" size={40} color={styles.iconColor} />;
-            case "linkedin":
-                return <FontAwesome name="linkedin-square" size={40} color={styles.iconColor} />;
-            case "web":
-                return <FontAwesome name="globe" size={40} color={styles.iconColor} />;
-            default:
-                return null;
-        }
-    };
-
     const handleLinkPress = (url) => {
         if (url) {
             Linking.openURL(url).catch((err) => console.error("Failed to open URL:", err));
@@ -62,7 +46,6 @@ const Social = () => {
         return (
             <TouchableOpacity onPress={() => handleLinkPress(item.link)} key={index} style={styles.socialItem}>
                 <View style={styles.iconContainer}>
-                    {/* {getVehicleIcon(item.icon)} */}
                     <Image
                         style={{ height: 50, width: 50 }}
                         source={item.icon}
@@ -111,6 +94,8 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 4,
         elevation: 2,
+        borderColor: Color.Button_Background_Color,
+        borderWidth: 1,
     },
     iconContainer: {
         width: 50,

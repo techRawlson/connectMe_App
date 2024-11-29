@@ -18,6 +18,8 @@ import CustomButton from "../components/CustomButton";
 import { useAsyncStorage } from "../hooks/useAsyncStorage";
 import { useOtp } from "../hooks/useOtp";
 import Font from "../constant/Font";
+import HomePageLogoImage from "../components/HomePageLogoImage";
+import { useNavigation } from "@react-navigation/native";
 
 const LoginScreen = ({ navigation }) => {
     const { width, height } = useWindowDimensions();
@@ -73,10 +75,12 @@ const LoginScreen = ({ navigation }) => {
         <View style={styles.rootContainer}>
             <View style={[styles.childView, { width: width - 80 }]}>
                 <View style={styles.imageView}>
-                    <Image
+                    {/* <Image
                         style={styles.logoImage}
                         source={require("./../../assrts/image/easylogo.png")}
-                    />
+                    /> */}
+                    <HomePageLogoImage style={styles.logoImage} />
+
                 </View>
                 <View style={styles.inputView}>
                     <SingleSelectDropdown
@@ -115,6 +119,13 @@ const LoginScreen = ({ navigation }) => {
                         disabled={mobileNumber.length !== 10}
                     />
                 </View>
+                <View style={styles.inputView}>
+                    <CustomButton
+                        title={"Cancel"}
+                        onPress={() => navigation.replace("Home Page")}
+                    />
+                </View>
+
             </View>
         </View>
     );

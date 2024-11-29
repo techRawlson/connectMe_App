@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Dimensions, Image } from 'react-native';
 import Color from '../constant/Color';
+import HomePageLogoImage from '../components/HomePageLogoImage';
 
 const faqData = [
     {
@@ -41,8 +42,9 @@ const Feq = () => {
 
     return (
         <View style={styles.container}>
+            <HomePageLogoImage style={{height:100,width:100,objectFit:"contain"}} />
             <FlatList
-                style={{padding: 20,}}
+                style={{ padding: 20, }}
                 data={faqData}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={renderItem}
@@ -70,16 +72,19 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 4,
         elevation: 3,
+        alignItems: "center"
     },
     cardTitle: {
         fontSize: 18,
         fontWeight: "bold",
-        // color: "#333",
-        color: Color.Header_Fooler_Background_Color,
+        color: "black",
+        // color: Color.Header_Fooler_Background_Color,
         marginBottom: 10,
+        textAlign: "center"
     },
     cardDescription: {
         fontSize: 14,
         color: "#555",
+        // textAlign: "center",
     },
 });

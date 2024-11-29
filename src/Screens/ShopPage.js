@@ -9,6 +9,7 @@ import Font from '../constant/Font';
 import CustomButton from '../components/CustomButton';
 
 const ShopPage = ({ navigation }) => {
+
     const UserDetails = useSelector((item) => item.UserDetails)
     // console.log("UserDatsils", UserDetails.number);
 
@@ -89,29 +90,39 @@ const ShopPage = ({ navigation }) => {
                 />
 
                 {/* Product Details */}
+                {/* black gray black blue */}
                 <Text style={styles.productTitle}>{item.productTitle}</Text>
                 <Text style={styles.productDescription}>{item.productDescription}</Text>
-                <Text style={styles.pricing}>
-                    MRP: <Text style={styles.strikeThrough}>₹{item.priceIncludingGST}/-</Text>{' '}
-                    Sale Price: ₹{item.calculatedDiscountedPrice}/-  Save {item.discountPercentage}
-                </Text>
+                {/* <Text style={styles.pricing}>
+                    MRP:<Text style={styles.strikeThrough}> ₹{item.priceIncludingGST}/-</Text>{' '}
+                    <Text style={styles.totalPrice}>Sale Price: ₹{item.calculatedDiscountedPrice}/-</Text>
+                    <Text style={styles.descountPrise}>Save {item.discountPercentage}</Text>
+                </Text> */}
+
+                <View style={{ flexDirection: "row" }}>
+                    <Text style={styles.pricing}>MRP: <Text style={styles.strikeThrough}>₹{item?.productPricing}/-</Text></Text>
+                    <Text style={styles.pricing}>Sale Price: <Text>₹{item?.calculatedDiscountedPrice}/-</Text></Text>
+                    <Text style={[styles.pricing, styles.totalPrice]}>Save {item?.discountPercentage}</Text>
+                </View>
 
                 {/* Quantity and Total Price */}
                 <View style={styles.quantityContainer}>
-                    <TouchableOpacity
+                    {/* <TouchableOpacity
                         style={styles.quantityButton}
                         onPress={() => handleDecrement(item.id)}
                     >
                         <Text style={styles.quantityButtonText}>-</Text>
-                    </TouchableOpacity>
-                    <Text style={styles.quantityText}>{quantity}</Text>
-                    <TouchableOpacity
+                    </TouchableOpacity> */}
+                    {/* <TouchableOpacity
                         style={styles.quantityButton}
                         onPress={() => handleIncrement(item.id)}
                     >
                         <Text style={styles.quantityButtonText}>+</Text>
-                    </TouchableOpacity>
-                    <Text style={styles.totalPrice}>Total ₹{totalPrice}/-</Text>
+                    </TouchableOpacity> */}
+                    <CustomButton title={"-"} onPress={() => handleDecrement(item.id)} />
+                    <Text style={styles.quantityText}>{quantity}</Text>
+                    <CustomButton title={"+"} onPress={() => handleIncrement(item.id)} />
+                    <Text style={[styles.totalPrice, { fontSize: Font.DataFontSize - 2 }]}>Total ₹{totalPrice}/-</Text>
 
                     {/* Add to Cart Button */}
                     <CustomButton
@@ -127,6 +138,7 @@ const ShopPage = ({ navigation }) => {
 
     return (
         <View style={styles.rootContainer}>
+            {/* <CustomButton title={"Btn"} onPress={() => countCartItem()} /> */}
             <ScrollView style={{ paddingHorizontal: 10, paddingTop: 5 }}>
                 <View style={styles.headerView}>
                     <Text style={styles.header}>Shop Now!</Text>
@@ -201,18 +213,20 @@ const styles = StyleSheet.create({
     },
     productDescription: {
         fontSize: Font.SimpalFontSize,
-        color: '#555',
+        color: Color.Simple_Text_Color,
         marginBottom: 10,
     },
     pricing: {
         fontSize: 15,
         // fontSize: Font.DataFontSize,
         color: '#000',
+        marginRight: 15,
         marginBottom: 10,
     },
     strikeThrough: {
         textDecorationLine: 'line-through',
         color: '#888',
+        // marginRight:20,
     },
     quantityContainer: {
         flexDirection: 'row',
@@ -221,8 +235,9 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     quantityButton: {
-        backgroundColor: '#e0e0e0',
-        padding: 8,
+        backgroundColor: Color.Button_Background_Color,
+        paddingVertical: 6,
+        paddingHorizontal: 12,
         borderRadius: 4,
     },
     quantityButtonText: {
@@ -235,9 +250,12 @@ const styles = StyleSheet.create({
         color: '#000',
     },
     totalPrice: {
-        fontSize: 16,
+        fontSize: Font.SimpalFontSize,
         fontWeight: 'bold',
-        color: '#000',
+        color: Color.Current_Prise_Text_Color,
+    },
+    descountPrise: {
+
     },
     addToCartButton: {
         backgroundColor: '#007bff',

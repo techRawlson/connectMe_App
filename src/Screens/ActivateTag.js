@@ -180,7 +180,7 @@ const ActivateTag = (probs) => {
                                 placeholder="Enter your vehicle number"
                                 placeholderTextColor="#aaa"
                                 value={vehicleNumber}
-                                onChangeText={setVehcleNumber}
+                                onChangeText={text => setVehcleNumber(text.toUpperCase())}
                             />
                         </View>
                         <View style={styles.inputContainer}>

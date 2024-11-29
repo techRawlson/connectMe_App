@@ -13,15 +13,16 @@ import Footer from './Footer'
 import Color from '../constant/Color'
 import AnimatedImageSlider from './AnimatedImageSlider'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useAsyncStorage } from '../hooks/useAsyncStorage'
+import { setUserDetails } from '../Redux/action'
 
 
 const HomePage = ({ navigation }) => {
+    const dispatch = useDispatch();
 
     const { getFromStorage } = useAsyncStorage()
     const UserDetails = useSelector((item) => item.UserDetails)
-    console.log("userDetails", UserDetails);
 
     const [isScannerActive, setIsScannerActive] = useState(false); // State to toggle scanner
 
@@ -36,12 +37,12 @@ const HomePage = ({ navigation }) => {
 
 
 
-    const getIdFromUrl = (url) => {
+    const getIdFromUrl = async (url) => {
         try {
             console.log("url", url);
             const match = url.match(/[?&]id=([^&]+)/); // Find `id` in the query string
             const id = match ? match[1] : null; // Extract the value
-            getData(id)
+            await getData(id)
             setIsScannerActive(false);
         } catch (error) {
             console.error("Error parsing URL:", error.message);
@@ -96,6 +97,7 @@ const HomePage = ({ navigation }) => {
 
     const logOutHandler = async () => {
         await AsyncStorage.removeItem("Login")
+        dispatch(setUserDetails({}));
         navigation.replace("Login")
     }
 
@@ -107,7 +109,6 @@ const HomePage = ({ navigation }) => {
         { title: "Support", iconName: "headset", iconLable: "FontAwesome5", onPress: () => { changeScreen("Support") } },
         { title: "Shop", iconName: "shopping-cart", iconLable: "FontAwesome5", onPress: () => { changeScreen("Shop Page") } },
         { title: "My Tags", iconName: "car", iconLable: "FontAwesome5", onPress: () => { changeScreen("My Tags") } },
-
         { title: "Social", iconName: "twitter", iconLable: "AntDesign", onPress: () => { changeScreen("Social") } },
         { title: "About", iconName: "circle-with-cross", iconLable: "Entypo" },
         { title: "FAQ", iconName: "info-circle", iconLable: "FontAwesome5", onPress: () => { changeScreen("Faq") } },

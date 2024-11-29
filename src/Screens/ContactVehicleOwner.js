@@ -12,10 +12,16 @@ import Color from '../constant/Color';
 import axios from 'axios';
 import Buttons from '../compont/Buttons';
 import Footer from './Footer';
+import HomePageLogoImage from '../components/HomePageLogoImage';
+import Font from '../constant/Font';
+import Bold from '../constant/Bold';
+import CustomButton from '../components/CustomButton';
 
 const ContactVehicleOwner = (probs) => {
+    const { width, height, fontScale, scale } = useWindowDimensions()
 
     let [ownerData, setOwnerData] = useState(probs?.route?.params?.data)
+
     // let [ownerData, setOwnerData] = useState({ "carDetails": "Hero", "enabled": true, "id": 8, "name": "Himanshu ", "phoneNumber": "9354111045", "qrCode": { "file": "=", "fileName": "QRCode_2.png", "fileType": "Image", "id": 14, "qrCodeUrl": "http://192.168.1.111:5173/activation/?id=lcqi5EgEJx", "uniqueId": "lcqi5EgEJx", "used": true }, "vehicleNumber": "HR22G8116" })
 
     const [selectedIndex, setSelectedIndex] = useState(null); // State to track selected item
@@ -23,6 +29,7 @@ const ContactVehicleOwner = (probs) => {
 
     const [carName, setCarName] = useState(ownerData?.carDetails)
     const [carNumber, setCarNumber] = useState(ownerData?.vehicleNumber)
+    const [carType, setCarType] = useState(ownerData?.vehicleType)
     const [modalVisable, setModalVisable] = useState(false)
 
     const [carNumbers, setCarNumbers] = useState('');
@@ -31,9 +38,6 @@ const ContactVehicleOwner = (probs) => {
     const [modalForCall, setModalForCall] = useState(true)
 
     const [connectingCallModal, setConnectingCallModal] = useState(false)
-
-    console.log(probs?.route?.params?.data?.name, probs?.route?.params?.data?.phoneNumber);
-
 
 
     // Map icon category names to actual icon components
@@ -48,39 +52,44 @@ const ContactVehicleOwner = (probs) => {
         {
             iconName: "do-not-disturb", // MaterialIcons
             iconCatagery: "MaterialIcons",
-            label: "Parked in No Parking Zone",
+            label: "The Light of the vehicle is on",
         },
         {
             iconName: "lightbulb", // FontAwesome5
             iconCatagery: "FontAwesome5",
-            label: "Car Lights Are On",
+            label: "Your lost item is with me",
         },
         {
             iconName: "car-crash", // FontAwesome5
             iconCatagery: "FontAwesome5",
-            label: "Car is Getting Towed",
+            label: "The vehicle is getting towned",
         },
         {
             iconName: "road", // FontAwesome5
             iconCatagery: "FontAwesome5",
-            label: "Blocking the Road",
+            label: "Someone is tampering with vehicle",
         },
         {
             iconName: "car-door-lock", // MaterialCommunityIcons
             iconCatagery: "MaterialCommunityIcons",
-            label: "Car/Window is Open",
+            label: "The vehicle is no parking",
         },
         {
             iconName: "pets", // MaterialIcons
             iconCatagery: "MaterialIcons",
-            label: "Baby/Pet in the Car",
-        },
-        {
-            iconName: "warning", // FontAwesome
-            iconCatagery: "FontAwesome",
-            label: "Something Seems Wrong",
+            label: "Something wrong with this vehicle",
         },
     ];
+
+    const selectItemHandler = (index, label) => {
+        if (index == selectedIndex) {
+            setSelectedIndex(null);
+            setSelectedText("")
+        } else {
+            setSelectedIndex(index);
+            setSelectedText(label)
+        }
+    }
 
     const selecterRenderItem = (item, index) => {
         const IconComponent = IconMap[item.iconCatagery]; // Retrieve the icon component dynamically
@@ -90,21 +99,23 @@ const ContactVehicleOwner = (probs) => {
             <TouchableHighlight
                 key={index}
                 underlayColor="#ddd"
-                onPress={() => { setSelectedIndex(index); setSelectedText(item.label) }} // Update selected index on press
+                onPress={() => { selectItemHandler(index, item.label); }} // Update selected index on press
                 style={[
                     styles.itemContainer,
                     isSelected && styles.selectedItem, // Apply selected style conditionally
                 ]}
             >
                 <View style={styles.row}>
-                    <View style={styles.iconContainer}>
+                    {/* <View style={styles.iconContainer}>
                         {IconComponent && <IconComponent name={item.iconName} size={isSelected ? 21 : 19} color={"black"} />}
-                    </View>
+                    </View> */}
                     <View style={styles.labelContainer}>
                         <Text style={[styles.labelText, isSelected && styles.selectedText]}>{item.label}</Text>
                     </View>
                     <View>
-                        {isSelected && <FontAwesome name="check-circle" size={21} color={"black"} />}
+                        {isSelected ?
+                            <MaterialIcons name="check-box" size={21} color={"black"} /> :
+                            <MaterialIcons name="check-box-outline-blank" size={21} color={"black"} />}
                     </View>
                 </View>
             </TouchableHighlight>
@@ -118,13 +129,14 @@ const ContactVehicleOwner = (probs) => {
                 Alert.alert("Alert", "Enter Valid Car Number")
                 return;
             }
-            console.log("Message Handler");
+            // console.log("Message Handler");
             let URL = `https://sms.paragalaxy.com/smpp_api/sms?token=7caab167db42fb832cf6ca9f68eebae6&To=${ownerData?.phoneNumber}&Text=Your%20verification%20code%20is%20000000.%20Please%20enter%20OTP%20to%20confirm%20mobile%20number.%20Parahittech.com&tid=1607100000000107353`
             // let URL = `https://sms.paragalaxy.com/smpp_api/sms?token=7caab167db42fb832cf6ca9f68eebae6&To=9671059942&Text=Your%20verification%20code%20is%20123456.%20Please%20enter%20OTP%20to%20confirm%20mobile%20number.%20Parahittech.com&tid=1607100000000107353`
             // let URL = `https://sms.paragalaxy.com/smpp_api/sms?token=7caab167db42fb832cf6ca9f68eebae6&To=9354111045&Text=Hello%My%20Name%20is%20Ashok%20kumar%20code%20is%20356785.%20Please%20enter%20OTP%20to%20confirm%20mobile%20number.%20Parahittech.com&tid=1607100000000107353`
             let data = await (await axios.post(URL)).data
-            console.log(data)
+            // console.log(data)
             if (data) {
+
                 Alert.alert("Alert", "Message send",
                     [
                         {
@@ -154,21 +166,19 @@ const ContactVehicleOwner = (probs) => {
             let URL = `https://click.paragalaxy.com/api/click2call.php?TID=8c6b2ca531&CID=MTAxOA==&BID=bWRtY2xpY2t0b2NhbGxfYzJjXzA0TWF5MjQ=&FPN=${phoneNumber}&SPN=${ownerData.phoneNumber}&BST=`;
             // let URL = `https://click.paragalaxy.com/api/click2call.php?TID=8c6b2ca531&CID=MTAxOA==&BID=bWRtY2xpY2t0b2NhbGxfYzJjXzA0TWF5MjQ=&FPN=${phoneNumber}&SPN=9671059942&BST=`;
             const data = (await axios.post(URL)).data;
-            console.log(data);
+            // console.log(data);
             if (data.status == 200) {
-                Alert.alert("Alert", "Call conneting",
-                    [
-                        {
-                            text: "Ok",
-                            isPreferred: true,
-                            onPress: () => { closeModal() }
-                        }
-                    ]
-                )
-                // closeModal()
-                // setTimeout(() => {
-                // setConnectingCallModal(true)
-                // }, 2000)
+                closeModal()
+                setConnectingCallModal(true)
+                // Alert.alert("Alert", "Call conneting",
+                //     [
+                //         {
+                //             text: "Ok",
+                //             isPreferred: true,
+                //             onPress: closeModal()
+                //         }
+                //     ]
+                // )
             }
         } catch (error) {
             console.error("Colling Error", error);
@@ -188,6 +198,8 @@ const ContactVehicleOwner = (probs) => {
         setModalVisable(false)
         setCarNumbers("")
         setPhoneNumber("")
+        setSelectedIndex(null)
+        setSelectedText("")
     }
 
     const RenderButton = ({ text }) => {
@@ -204,56 +216,55 @@ const ContactVehicleOwner = (probs) => {
 
     return (
         <View style={styles.container}>
-            <View style={{ flex: 1, paddingHorizontal: 20, paddingTop: 10 }}>
-                <View style={styles.header}>
+            <ScrollView>
+                <View style={{ flex: 1, paddingHorizontal: 20, paddingTop: 10 }}>
+                    {/* <View style={styles.header}>
                     <Text style={styles.title}>Contact Vehicle Owner</Text>
                     <Text style={[styles.vehicleDetails, styles.subtitle]}>{carName}</Text>
                     <Text style={[styles.hiddenText, styles.subtitle]}>{carNumber.slice(0, 4)}####</Text>
                     <Text style={styles.description}>
                         Please select a reason why you want to contact the owner.
                     </Text>
-                </View>
+                </View> */}
+                    <View style={styles.logoimageView}>
+                        <HomePageLogoImage style={styles.logoImage} />
+                    </View>
+                    <View style={styles.headerTextView}>
+                        <Text style={styles.headerText}>Vehicle Details</Text>
+                    </View>
+                    <View style={[styles.detailsViewContainer, { width: width - 100 }]}>
+                        <View style={styles.detailsView}>
+                            <Text style={styles.detailsLable}>Vehicle Type</Text>
+                            <Text style={styles.detailsText}>{carType}</Text>
+                        </View>
+                        <View style={styles.detailsView}>
+                            <Text style={styles.detailsLable}>Vehicle No.</Text>
+                            <Text style={styles.detailsText}>{carNumber.slice(0, 4)}####</Text>
+                        </View>
+                        <View style={styles.detailsView}>
+                            <Text style={styles.detailsLable}>Vehicle Details</Text>
+                            <Text style={styles.detailsText} numberOfLines={1}>{carName}</Text>
+                        </View>
+                    </View>
 
-                <View style={styles.list}>
-                    <View style={[styles.itemViewContainer, { width: Dimensions.get("window").width - 50, }]}>
-                        {data.map((item, index) => selecterRenderItem(item, index))}
+                    <View style={styles.list}>
+                        <View style={[styles.itemViewContainer, { width: Dimensions.get("window").width - 50, }]}>
+                            {data.map((item, index) => selecterRenderItem(item, index))}
+                        </View>
+                    </View>
+                    <View style={[styles.buttonViewContainer, { marginTop: 20 }]}>
+                        <CustomButton title={"Message"} onPress={() => collMessageHandler("Message")} />
+                        <CustomButton title={"Private Call"} onPress={() => collMessageHandler("Call")} />
+                    </View>
+                    <View style={styles.buttonViewContainer}>
+                        <CustomButton title={"Emergency"} />
+                    </View>
+                    <View style={{ marginTop: 10 }}>
+                        <Text style={{ color: "#bfbfbf", fontSize: 12, textAlign: "center" }}>Dlease note any kind of spam will get your ip and number blocked on platform for 6 months.</Text>
                     </View>
                 </View>
-                <View style={styles.buttonViewContainer}>
-                    <RenderButton text={"Message"} />
-                    <RenderButton text={"Private Call"} />
-                </View>
-                <View style={{ marginTop: 10 }}>
-                    <Text style={{ color: "#bfbfbf", fontSize: 12, textAlign: "center" }}>Dlease note any kind of spam will get your ip and number blocked on platform for 6 months.</Text>
-                </View>
-            </View>
-            <Footer />
-            {/* <View style={styles.bottomButtonViewContainer}>
-                <TouchableOpacity style={[styles.bottomButtonView]}>
-                    <View>
-                        <Ionicons name='arrow-back' size={22} />
-                    </View>
-                    <Text>Back</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.bottomButtonView}>
-                    <View>
-                        <Ionicons name='camera' size={22} />
-                    </View>
-                    <Text>Scan</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.bottomButtonView}>
-                    <View>
-                        <AntDesign name='question' size={22} />
-                    </View>
-                    <Text>Help</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.bottomButtonView]}>
-                    <View>
-                        <Foundation name='indent-more' size={22} />
-                    </View>
-                    <Text>More</Text>
-                </TouchableOpacity>
-            </View> */}
+                {/* <Footer /> */}
+            </ScrollView>
             <Modal
                 transparent={true}
                 animationType='slide'
@@ -387,9 +398,53 @@ const styles = StyleSheet.create({
         // paddingHorizontal: 20,
         backgroundColor: '#f9f9f9',
     },
-    header: {
-        marginBottom: 10,
+    logoimageView: {
+        height: 60,
+        alignItems: "center",
+        justifyContent: "center",
     },
+    logoImage: {
+        width: 150,
+        objectFit: "contain"
+    },
+    headerTextView: {
+        alignItems: "center",
+
+    },
+    headerText: {
+        color: Color.Header_Font_Color,
+        fontSize: Font.HeaderFontSize,
+        fontWeight: Bold.HeaderFontWeight,
+    },
+
+    detailsViewContainer: {
+        marginTop: 10,
+        // borderWidth: 1,
+        marginHorizontal: "auto"
+        // alignItems: "center",
+    },
+    detailsView: {
+        flexDirection: "row",
+    },
+    detailsLable: {
+        color: Color.Header_Fooler_Background_Color,
+        fontSize: Font.LableFontSize,
+        fontWeight: Bold.LableFontWeight,
+        width: 150,
+    },
+    detailsText: {
+        color: Color.Data_Font_Color,
+        fontSize: Font.DataFontSize,
+        fontWeight: Bold.DataFontWeight,
+    },
+
+
+
+
+
+
+
+
     title: {
         fontSize: 22,
         fontWeight: '400',
@@ -431,7 +486,7 @@ const styles = StyleSheet.create({
     },
     selectedItem: {
         backgroundColor: Color.Button_Background_Color, // Highlight color for selected item
-        borderWidth: 3,
+        borderWidth: 2,
         borderColor: "gray"
     },
     iconContainer: {
@@ -442,7 +497,7 @@ const styles = StyleSheet.create({
     },
     labelText: {
         fontSize: 16,
-        color: Color.Button_Text_Color,
+        color: "black",
         fontWeight: "700"
     },
     selectedText: {
@@ -454,9 +509,10 @@ const styles = StyleSheet.create({
     },
 
     buttonViewContainer: {
-        marginTop: 25,
+        marginTop: 10,
+        // marginBottom: 10,
         flexDirection: "row",
-        justifyContent: "space-between"
+        justifyContent: "space-around"
     },
     bottomButtonViewContainer: {
         flexDirection: "row",

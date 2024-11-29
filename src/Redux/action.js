@@ -1,4 +1,4 @@
-import { COUNTER, HOMEWORK_DATA, USER_DETAILS } from "./constants"
+import { HOMEWORK_DATA, SET_CART_ITEM_COUNT, USER_DETAILS } from "./constants"
 
 export const setUserDetails = (item) => {
     return {
@@ -6,15 +6,16 @@ export const setUserDetails = (item) => {
         data: item
     }
 }
-export const counterIncrement = (num) => {
-    return {
-        type: COUNTER,
-        data: num
-    }
-}
 export const setHomeworkData = (item) => {
     return {
         type: HOMEWORK_DATA,
         data: item
     }
-} 
+}
+
+export const setCartItemCount = (count) => {
+    return {
+        type: SET_CART_ITEM_COUNT,
+        data: count,
+    }
+};

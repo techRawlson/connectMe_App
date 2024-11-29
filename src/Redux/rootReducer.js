@@ -1,8 +1,8 @@
 import { combineReducers } from "redux"
-import { Counter, HomeworkData, UserDetails } from "./reducer"
+import { CartItemCount, HomeworkData, UserDetails } from "./reducer"
 
 export default combineReducers({
     UserDetails,
-    Counter,
-    HomeworkData
+    HomeworkData,
+    CartItemCount
 })

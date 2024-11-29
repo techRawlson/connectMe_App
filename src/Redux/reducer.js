@@ -1,4 +1,4 @@
-import { COUNTER, HOMEWORK_DATA, USER_DETAILS } from "./constants";
+import { HOMEWORK_DATA, SET_CART_ITEM_COUNT, USER_DETAILS } from "./constants";
 
 const INITIALSTATE = {}
 
@@ -11,11 +11,11 @@ export const UserDetails = (state = INITIALSTATE, action) => {
     }
 }
 
-const COUNTERINITIALSTATE = 0
-export const Counter = (state = COUNTERINITIALSTATE, action) => {
+const SETCARTITEMCOUNT = 0
+export const CartItemCount = (state = SETCARTITEMCOUNT, action) => {
     switch (action.type) {
-        case COUNTER:
-            return action.data+state+1;
+        case SET_CART_ITEM_COUNT:
+            return action.data;
         default:
             return state
     }

@@ -261,6 +261,7 @@ const styles = StyleSheet.create({
         width: Dimensions.get("window").width - 50,
         padding: 20,
         borderRadius: 20,
+        
         backgroundColor: "#fff",
         elevation: 5, // Shadow for Android
         shadowColor: "#000", // Shadow for iOS

@@ -1,6 +1,6 @@
 import { Alert, Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux';
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import { NavigationContainer, StackActions } from '@react-navigation/native'
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
@@ -19,9 +19,14 @@ import CartPage from './CartPage';
 import Demo from './Demo';
 import Feq from './Feq';
 import Support from './Support';
-import { setUserDetails } from '../Redux/action';
+import { setCartItemCount, setUserDetails } from '../Redux/action';
 import { useAsyncStorage } from '../hooks/useAsyncStorage';
 import Social from './Social';
+import Color from '../constant/Color';
+import HomePageLogoImage from '../components/HomePageLogoImage';
+import url from '../constant/url';
+import axios from 'axios';
+import CheckoutPage from './CheckoutPage';
 
 
 const Stack = createNativeStackNavigator();
@@ -31,28 +36,48 @@ const Stack = createNativeStackNavigator();
 const Main = () => {
     const dispatch = useDispatch();
 
+    const CartItemCount = useSelector(item => item.CartItemCount);
     const UserDetails = useSelector(item => item.UserDetails)
     // console.log("Main", UserDetails);
     const { saveToStorage, getFromStorage } = useAsyncStorage();
 
-    useEffect(() => {
-        const checkLogin = async () => {
-            try {
-                // let userData = JSON.parse(await AsyncStorage.getItem("Login"))
-
-                const userData = await getFromStorage("Login");
-                console.log("userData", userData);
-
-                if (userData?.login) {
-                    console.log("Logins", userData);
-                    dispatch(setUserDetails(userData));
-                }
-            } catch (error) {
-                console.error("Error Fetching Data from Storage", error);
+    const checkLogin = async () => {
+        try {
+            const userData = await getFromStorage("Login");
+            console.log("userData", userData);
+            if (userData?.login) {
+                console.log("Logins", userData);
+                dispatch(setUserDetails(userData));
             }
-        };
+        } catch (error) {
+            console.error("Error Fetching Data from Storage", error);
+        }
+    };
+
+    const countCartItem = async () => {
+        try {
+            if (UserDetails.number) {
+                const URL = `${url}/api/cart/user/${UserDetails?.number}`;
+                const data = (await axios.get(URL)).data;
+                if (data.length > 0) {
+                    dispatch(setCartItemCount(data.length))
+                }
+                // console.log("Cart Data", URL);
+                // console.log("Cart Data", data.length);
+            }
+        } catch (error) {
+            console.error("Error fetching Cart item length", error);
+        }
+    };
+
+
+    useEffect(() => {
         checkLogin();
     }, []);
+    useEffect(() => {
+        countCartItem();
+    }, [UserDetails.number]);
+
 
     const changeScreen = (navigation, screenName) => {
 
@@ -91,7 +116,7 @@ const Main = () => {
                     headerBackVisible: true,
                     headerTitle: "",
                     headerLeft: () => (
-                        <Image style={styles.logoImage} source={require("../../assrts/image/easylogo.png")} />
+                        <HomePageLogoImage style={styles.logoImage} />
                     ),
                 }}
             >
@@ -107,6 +132,7 @@ const Main = () => {
                     name='Home Page'
                     component={HomePage}
                     options={({ navigation }) => ({
+                        headerBackVisible: false,
                         headerRight: () => (
                             <TouchableOpacity onPress={() => changeScreen(navigation, "Profile")}>
                                 <View style={{ borderRadius: 25 }}>
@@ -143,10 +169,33 @@ const Main = () => {
                 <Stack.Screen
                     name='Shop Page'
                     component={ShopPage}
+                    // initialParams={{ countCartItem }}
                     options={({ navigation }) => ({
+                        // headerRight: () => (
+                        //     <FontAwesome name='shopping-cart' size={23} onPress={() => changeScreen(navigation, "Cart Page")} />
+                        // )
+
                         headerRight: () => (
-                            <FontAwesome name='shopping-cart' size={23} onPress={() => changeScreen(navigation, "Cart Page")} />
-                        )
+                            <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                <FontAwesome
+                                    name="shopping-cart"
+                                    size={23}
+                                    onPress={() => navigation.navigate("Cart Page")}
+                                />
+                                {CartItemCount > 0 && (
+                                    <View
+                                        style={{
+                                            backgroundColor: "red",
+                                            borderRadius: 10,
+                                            paddingHorizontal: 5,
+                                            marginLeft: -10,
+                                        }}
+                                    >
+                                        <Text style={{ color: "white", fontSize: 12 }}>{CartItemCount}</Text>
+                                    </View>
+                                )}
+                            </View>
+                        ),
                     })}
                 />
                 <Stack.Screen
@@ -154,13 +203,18 @@ const Main = () => {
                     component={CartPage}
                 />
                 <Stack.Screen name='Demo' component={Demo} />
-                <Stack.Screen name='Faq' component={Feq} />
+                <Stack.Screen name='Faq' component={Feq}
+                    options={{
+                        // headerBackVisible: false
+                    }}
+                />
                 <Stack.Screen name='Support' component={Support}
                     options={{
                         headerLeft: () => ""
                     }}
                 />
                 <Stack.Screen name='Social' component={Social} />
+                <Stack.Screen name='Checkout Page' component={CheckoutPage} />
             </Stack.Navigator>
         </NavigationContainer>
     )

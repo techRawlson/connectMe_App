@@ -7,6 +7,8 @@ import Color from "../constant/Color";
 import Font from "../constant/Font";
 import Bold from "../constant/Bold";
 import CustomButton from "../components/CustomButton";
+import HomePageLogoImage from "../components/HomePageLogoImage";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
 // Get the screen dimensions
 const { width, height } = Dimensions.get("window");
@@ -25,7 +27,7 @@ const CartPage = ({ navigation }) => {
       console.log(URL);
 
 
-      console.log("DAta:::::::::::::::::;", data);
+      // console.log("DAta:::::::::::::::::;", data);
 
       setCartProducts(data); // Assuming the response contains a field cartItems
       // setCartProducts([]); // Assuming the response contains a field cartItems
@@ -67,12 +69,7 @@ const CartPage = ({ navigation }) => {
   };
 
   const handleDecreaseQuantity = async (id) => {
-
     try {
-
-
-
-
       const updatedCart = [...cartProducts];
       const productToUpdate = updatedCart.find((product) => product.id === id);
       if (productToUpdate) {
@@ -130,11 +127,15 @@ const CartPage = ({ navigation }) => {
 
         <Text style={styles.productTitle}>{item.productTittle}</Text>
         <Text style={styles.productDescription}>{item.productDescription}</Text>
-        <Text style={styles.pricing}>
-          MRP: <Text style={styles.strikeThrough}>₹{item.productDiscountPrice}/-</Text>{' '}
+        {/* <Text style={styles.pricing}>
+          <Text style={[styles.strikeThrough]}>₹{item.productDiscountPrice}/-</Text>{'     '}
           Sale Price:<Text style={styles.totalPrice}>₹{item.productCalculatedDiscountedPrice}/-</Text>   Save {item.productDiscountPercentage.toString().split(".")[0]}%
-        </Text>
-        {/* {/* */}
+          </Text> */}
+        <View style={{ flexDirection: "row" }}>
+          <Text style={[styles.pricing, styles.strikeThrough]}>₹{item.productPricing}/-</Text>
+          <Text style={styles.pricing}>Sale Price: <Text>₹{item.productCalculatedDiscountedPrice}/-</Text></Text>
+          <Text style={[styles.pricing, styles.totalPrice]}>Save {item.productDiscountPercentage.toString().split(".")[0]}%</Text>
+        </View>
         <View style={styles.quantityContainer}>
           {/* <TouchableOpacity
             style={styles.quantityButton}
@@ -156,7 +157,7 @@ const CartPage = ({ navigation }) => {
           </View>
 
           {/* <Text style={styles.totalPrice}>Total ₹{totalPrice}/-</Text> */}
-          < CustomButton title={"Remove"} />
+          < CustomButton title={<MaterialIcons name="delete" size={20} />} />
         </View>
       </View>
     );
@@ -164,34 +165,32 @@ const CartPage = ({ navigation }) => {
 
   return (
     <View style={styles.rootContainer}>
-      <ScrollView
+      {/* <ScrollView
         style={{ paddingTop: 10, paddingHorizontal: 15 }}
         refreshControl={
           <RefreshControl refreshing={referse} onRefresh={fetchCartDetails} />
         }
-      >
-        {cartProducts.length > 0 ? (
-          cartProducts.map((item, index) => cartRenderItem(item, index))
-        ) : (
-          <View style={styles.noDataContainer}>
-            <Text style={styles.noDataText}>No data found</Text>
-            <TouchableOpacity
-              style={styles.shopButton}
-              onPress={() => navigation.navigate("Shop")}
-            >
-              <Text style={styles.shopButtonText}>Go to Shop</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-        {cartProducts.length > 0 && (
-          <View style={styles.summaryContainer}>
-            <Text style={styles.totalLabel}>Grand Total: ₹ {calculateTotalPrice()}</Text>
-            <TouchableOpacity style={styles.checkoutButton}>
-              <Text style={styles.checkoutButtonText}>Proceed to Checkout</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      </ScrollView>
+      > */}
+      {cartProducts.length > 0 ? (
+        cartProducts.map((item, index) => cartRenderItem(item, index))
+      ) : (
+        <View style={styles.noDataContainer}>
+          <Text style={styles.noDataText}>No data found</Text>
+          <TouchableOpacity
+            style={styles.shopButton}
+            onPress={() => navigation.navigate("Shop Page")}
+          >
+            <Text style={styles.shopButtonText}>Go to Shop</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+      {cartProducts.length > 0 && (
+        <View style={styles.summaryContainer}>
+          <Text style={styles.totalLabel}>Subtotal: ₹ {calculateTotalPrice()}</Text>
+          <CustomButton title={"Proceed to Checkout"} />
+        </View>
+      )}
+      {/* </ScrollView> */}
     </View>
   );
 };
@@ -204,6 +203,8 @@ const styles = StyleSheet.create({
     maxWidth: width, // Set the maxWidth to screen width
     height: height, // Set the height to screen height
     overflow: "auto",
+    paddingTop: 10,
+    paddingHorizontal: 15
   },
   noDataContainer: {
     flex: 1,
@@ -250,6 +251,7 @@ const styles = StyleSheet.create({
     // fontSize: Font.DataFontSize,
     color: '#000',
     marginBottom: 10,
+    marginRight: 15,
   },
   strikeThrough: {
     textDecorationLine: 'line-through',
@@ -294,14 +296,23 @@ const styles = StyleSheet.create({
 
   summaryContainer: {
     // borderWidth: 1,
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+
+
+    flexDirection: "row",
     textAlign: "center",
     marginVertical: 20,
+    justifyContent: "space-around",
+
   },
   totalLabel: {
     fontSize: Font.LableFontSize,
     fontWeight: Bold.LableFontWeight,
     color: Color.Lable_Font_Color,
-    marginBottom: 15,
+    // marginBottom: 15,
   },
   checkoutButton: {
     backgroundColor: Color.Submit_Button_Background_Color,
