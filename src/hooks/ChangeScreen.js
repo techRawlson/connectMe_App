@@ -7,8 +7,8 @@ export default ChangeScreen = () => {
     const navigation = useNavigation()
     const dispatch = useDispatch();
 
-    const ChangeScreenHandler = (screenName) => {
-        navigation.navigate(screenName)
+    const ChangeScreenHandler = (screenName, data) => {
+        navigation.navigate(screenName, data)
     }
 
     const Logout = async () => {

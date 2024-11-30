@@ -32,7 +32,7 @@ const Support = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <Image source={require("../../assrts/image/easylogo.png")} style={styles.logo} />
-            <Text style={styles.heading}>Support</Text>
+            {/* <Text style={styles.heading}>Support</Text> */}
             <Text style={styles.description}>If you have any questions or need assistance, feel free to reach out to us.</Text>
             <View style={styles.contactContainer}>
                 <Text style={styles.contactHeading}>Contact Us</Text>

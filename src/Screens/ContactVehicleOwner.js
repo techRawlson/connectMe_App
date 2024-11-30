@@ -220,14 +220,6 @@ const ContactVehicleOwner = (probs) => {
         <View style={styles.container}>
             <ScrollView>
                 <View style={{ flex: 1, paddingHorizontal: 20, paddingTop: 10 }}>
-                    {/* <View style={styles.header}>
-                    <Text style={styles.title}>Contact Vehicle Owner</Text>
-                    <Text style={[styles.vehicleDetails, styles.subtitle]}>{carName}</Text>
-                    <Text style={[styles.hiddenText, styles.subtitle]}>{carNumber.slice(0, 4)}####</Text>
-                    <Text style={styles.description}>
-                        Please select a reason why you want to contact the owner.
-                    </Text>
-                </View> */}
                     <View style={styles.logoimageView}>
                         <HomePageLogoImage style={styles.logoImage} />
                     </View>
@@ -257,10 +249,10 @@ const ContactVehicleOwner = (probs) => {
                     <View style={[styles.buttonViewContainer, { marginTop: 20 }]}>
                         <CustomButton title={"Message"} onPress={() => collMessageHandler("Message")} />
                         <CustomButton title={"Private Call"} onPress={() => collMessageHandler("Call")} />
+                        <CustomButton title={"Emergency"} bgColor={Color.Cansel_Button_Background_Color} />
                     </View>
-                    <View style={styles.buttonViewContainer}>
-                        <CustomButton title={"Emergency"} />
-                    </View>
+                    {/* <View style={styles.buttonViewContainer}>
+                    </View> */}
                     <View style={{ marginTop: 10 }}>
                         <Text style={{ color: "#bfbfbf", fontSize: 12, textAlign: "center" }}>Dlease note any kind of spam will get your ip and number blocked on platform for 6 months.</Text>
                     </View>
@@ -276,24 +268,26 @@ const ContactVehicleOwner = (probs) => {
                 <View style={styles.modalRootContainer}>
                     <View style={styles.modalChildView}>
                         {/* Modal Header */}
+                        {/* <View style={{ alignItems: "flex-end" }}>
+                            <Ionicons name='close' color={Color.Button_Background_Color} size={30} onPress={closeModal} />
+                        </View> */}
                         <View style={styles.modalHeader}>
                             <Text style={styles.modalHeading}>Vehicle Details Form</Text>
-                            <Ionicons name='close' color={Color.Button_Background_Color} size={30} onPress={closeModal} />
                         </View>
 
                         {/* Car Number Input */}
                         <View style={styles.inputContainer}>
                             <View style={{ flexDirection: "row" }}>
-                                <Text style={styles.modallabelText}>Last four digits of vehicle number </Text>
+                                <Text style={styles.modallabelText}>Last four digit vehicle number</Text>
                                 <Ionicons name='star' color={"red"} size={7} />
                             </View>
 
                             <Text style={styles.carNumberPreview}>
-                                {carNumber.slice(0, 4)}####
+                                {carNumber?.slice(0, 4)}####
                             </Text>
                             <TextInput
                                 style={styles.textInput}
-                                placeholder='Enter your last four digits vehicle num'
+                                placeholder='Enter last four digit of vehicle num'
                                 placeholderTextColor='gray'
                                 keyboardType='phone-pad'
                                 maxLength={4}
@@ -309,17 +303,17 @@ const ContactVehicleOwner = (probs) => {
                             {
                                 modalForCall ?
                                     <View style={{ flexDirection: "row" }}>
-                                        <Text style={styles.modallabelText}>Contact Number </Text>
+                                        <Text style={styles.modallabelText}>Enter your phone number here </Text>
                                         <Ionicons name='star' color={"red"} size={7} />
                                     </View> :
                                     <View style={{ flexDirection: "row" }}>
-                                        <Text style={styles.modallabelText}>Do you want the vehicle owner to call you? You can enter your number here</Text>
+                                        <Text style={styles.modallabelText}>Enter your phone number here</Text>
                                     </View>
                             }
 
                             <TextInput
                                 style={styles.textInput}
-                                placeholder='Enter your phone number'
+                                placeholder={modalForCall ? "Enter your phone number" : "Your phone number (Optional)"}
                                 placeholderTextColor='gray'
                                 keyboardType='phone-pad'
                                 value={phoneNumber}
@@ -328,21 +322,21 @@ const ContactVehicleOwner = (probs) => {
                         </View>
 
                         {/* Information Text */}
-                        <Text style={styles.infoText}>
-                            Your phone number will be securely transmitted and encrypted. It will not be shared with any third party and will only be used for communication during the call.
-                        </Text>
+                        <Text style={styles.infoText}>Your phone number will remain secure and private during this Message communication and will not be shared anywhere else.</Text>
 
                         {/* Buttons */}
                         <View style={styles.buttonContainer}>
                             <View style={styles.button}>
-                                <Buttons title={"Cancel"} bgColor={Color.Cansel_Button_Background_Color} textColor={Color.Button_Text_Color} onClick={closeModal} />
-                            </View>
-                            <View style={styles.button}>
                                 {
                                     modalForCall ?
-                                        <Buttons title={"Call"} bgColor={Color.Submit_Button_Background_Color} textColor={Color.Button_Text_Color} onClick={connectCollHandler} /> :
-                                        <Buttons title={"Message"} bgColor={Color.Submit_Button_Background_Color} textColor={Color.Button_Text_Color} onClick={sendMessageHandler} />
+                                        <CustomButton title={"Call"} onPress={connectCollHandler} /> :
+                                        <CustomButton title={"Send"} onPress={sendMessageHandler} />
+                                    // <Buttons title={"Call"} bgColor={Color.Submit_Button_Background_Color} textColor={Color.Button_Text_Color} onClick={connectCollHandler} /> :
+                                    // <Buttons title={"Message"} bgColor={Color.Submit_Button_Background_Color} textColor={Color.Button_Text_Color} onClick={sendMessageHandler} />
                                 }
+                            </View>
+                            <View style={styles.button}>
+                                <CustomButton title={"Cancel"} onPress={closeModal} />
                             </View>
                         </View>
                     </View>
@@ -411,6 +405,7 @@ const styles = StyleSheet.create({
     },
     headerTextView: {
         alignItems: "center",
+        marginTop: 30
 
     },
     headerText: {
@@ -435,6 +430,7 @@ const styles = StyleSheet.create({
         width: 150,
     },
     detailsText: {
+        flex: 1,
         color: Color.Data_Font_Color,
         fontSize: Font.DataFontSize,
         fontWeight: Bold.DataFontWeight,
@@ -537,8 +533,8 @@ const styles = StyleSheet.create({
     },
     modalChildView: {
         width: '90%',
-        // backgroundColor: '#fff',
-        backgroundColor: 'black',
+        backgroundColor: '#fff',
+        // backgroundColor: 'black',
         borderRadius: 10,
         padding: 20,
         elevation: 5, // Shadow for Android
@@ -589,12 +585,12 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         padding: 10,
         fontSize: 16,
-        backgroundColor: "black",
+        // backgroundColor: "black",
         color: Color.Button_Background_Color,
     },
     infoText: {
-        fontSize: 14,
-        color: '#666',
+        fontSize: Font.SimpalFontSize,
+        color: Color.Simple_Text_Color,
         // textAlign: 'center',
         marginVertical: 10,
     },
@@ -602,6 +598,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginTop: 20,
+        alignItems: "center"
     },
     button: {
         width: 100

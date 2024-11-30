@@ -29,6 +29,7 @@ import url from '../constant/url';
 import axios from 'axios';
 import CheckoutPage from './CheckoutPage';
 import AddressPage from './AddressPage';
+import ChangeScreen from '../hooks/ChangeScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -37,6 +38,7 @@ const Stack = createNativeStackNavigator();
 
 const Main = () => {
     const dispatch = useDispatch();
+    // const { ChangeScreenHandler, Logout } = ChangeScreen();
 
     const CartItemCount = useSelector(item => item.CartItemCount);
     const UserDetails = useSelector(item => item.UserDetails)
@@ -154,7 +156,7 @@ const Main = () => {
                                 <View style={{ borderRadius: 25 }}>
                                     {UserDetails?.login ?
                                         <Image
-                                            style={{ height: 35, width: 35, borderRadius: 5 }}
+                                            style={{ height: 35, width: 35, borderRadius: 18 }}
                                             source={profileImage ? { uri: `data:image/jpeg;base64,${profileImage}` } : require("../../assrts/image/ProfileIcon.png")}
                                         />
                                         : <Entypo name='login' size={28} onPress={() => logOutHandler(navigation)} />}

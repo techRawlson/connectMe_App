@@ -16,9 +16,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useDispatch, useSelector } from 'react-redux'
 import { useAsyncStorage } from '../hooks/useAsyncStorage'
 import { setUserDetails } from '../Redux/action'
+import ChangeScreen from '../hooks/ChangeScreen'
 
 
 const HomePage = ({ navigation }) => {
+    const { ChangeScreenHandler, Logout } = ChangeScreen()
     const dispatch = useDispatch();
 
     const { getFromStorage } = useAsyncStorage()
@@ -60,12 +62,14 @@ const HomePage = ({ navigation }) => {
 
 
             if (data) {
-                navigation.navigate("Contact Vehicle Owner", { data });
+                ChangeScreenHandler("Contact Vehicle Owner", { data })
+                // navigation.navigate("Contact Vehicle Owner", { data });
             }
 
         } catch (error) {
             if (error.status == 404) {
-                navigation.navigate("Activate Tag", { id });
+                ChangeScreenHandler("Activate Tag", { id })
+                // navigation.navigate("Activate Tag", { id });
             } else {
                 console.error("Get Data Error", error)
             }
@@ -87,25 +91,19 @@ const HomePage = ({ navigation }) => {
                 {
                     text: "Login",
                     // style: "destructive",
-                    onPress: () => { logOutHandler() }
+                    onPress: Logout
                 }
             ])
         } else {
-            navigation.navigate(profile)
+            ChangeScreenHandler(profile);
         }
-    }
-
-    const logOutHandler = async () => {
-        await AsyncStorage.removeItem("Login")
-        dispatch(setUserDetails({}));
-        navigation.replace("Login")
     }
 
     let data = [
         // { title: "Profile", iconName: "user-alt", iconLable: "FontAwesome5" },
         { title: "Demo", iconName: "youtube", iconLable: "AntDesign", onPress: () => { changeScreen("Demo") } },
         { title: "Activate Tag", iconName: "tag", iconLable: "AntDesign", onPress: toggleScanner },
-        { title: "Log out", iconName: "log-out", iconLable: "Entypo", onPress: logOutHandler },
+        { title: "Log out", iconName: "log-out", iconLable: "Entypo", onPress: Logout },
         { title: "Support", iconName: "headset", iconLable: "FontAwesome5", onPress: () => { changeScreen("Support") } },
         { title: "Shop", iconName: "shopping-cart", iconLable: "FontAwesome5", onPress: () => { changeScreen("Shop Page") } },
         { title: "My Tags", iconName: "car", iconLable: "FontAwesome5", onPress: () => { changeScreen("My Tags") } },

@@ -22,7 +22,6 @@ const AddressPage = ({ navigation }) => {
         email: "",
         phone: "",
         address1: "",
-        address2: "",
         city: "",
         state: "",
         postalCode: "",
@@ -52,7 +51,6 @@ const AddressPage = ({ navigation }) => {
                         email: formData.email,
                         phoneNumber: formData.phone,
                         addressLine1: formData.address1,
-                        addressLine2: formData.address2,
                         city: formData.city,
                         state: formData.state,
                         postalCode: formData.postalCode,
@@ -112,14 +110,6 @@ const AddressPage = ({ navigation }) => {
                 onChangeText={(value) => handleInputChange('address1', value)}
             />
 
-            <Text style={styles.label}>Address Line 2</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Enter your Address Line 2"
-                value={formData.address2}
-                onChangeText={(value) => handleInputChange('address2', value)}
-            />
-
             {/* Address Input */}
             <Text style={styles.label}>City</Text>
             <TextInput
@@ -155,10 +145,10 @@ const AddressPage = ({ navigation }) => {
             />
 
             {/* Submit Button */}
-            <CustomButton title={"Place Order"} onPress={handleSubmit} />
-            {/* <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+            {/* <CustomButton title={"Place Order"} onPress={handleSubmit} /> */}
+            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
                 <Text style={styles.buttonText}>Submit</Text>
-            </TouchableOpacity> */}
+            </TouchableOpacity>
         </ScrollView>
     );
 };

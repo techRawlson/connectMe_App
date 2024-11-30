@@ -9,8 +9,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import DropDownButton from '../compont/DropDownButton'
 import Footer from './Footer'
 import CustomButton from '../components/CustomButton'
+import ChangeScreen from '../hooks/ChangeScreen'
 
 const ActivateTag = (probs) => {
+    const { ChangeScreenHandler, Logout } = ChangeScreen()
     const [selectedVehicleType, setSelectedVehicleType] = useState(""); // State to hold selected vehicle type
     const [otpSend, setOtpSend] = useState(false)
     const [uniqueId, setUniqueId] = useState(probs?.route?.params?.id)

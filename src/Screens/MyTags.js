@@ -289,7 +289,9 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#ddd',
         borderRadius: 8,
-        padding: 10,
+        // padding: 10,
+        paddingVertical: 3,
+        paddingHorizontal: 8,
         fontSize: 16,
     },
     statusContainer: {

@@ -7,8 +7,9 @@ import { useSelector } from 'react-redux';
 import Bold from '../constant/Bold';
 import Font from '../constant/Font';
 import CustomButton from '../components/CustomButton';
+import ChangeScreen from '../hooks/ChangeScreen';
 
-const ShopPage = ({ navigation }) => {
+const ShopPage = () => {
 
     const UserDetails = useSelector((item) => item.UserDetails)
     // console.log("UserDatsils", UserDetails.number);
@@ -32,11 +33,6 @@ const ShopPage = ({ navigation }) => {
     useEffect(() => {
         getData()
     }, [])
-
-    const changeScreen = () => {
-        console.log("changeScreen");
-        navigation.navigate("Cart Page")
-    }
 
 
     const saveToCart = async (id, quantity) => {
